@@ -1,10 +1,5 @@
-// 数据默认走 node 层，token 在 node 层处理
-
 import axios from 'axios'
-import { query } from './qs'
 import { baseURL } from '../config'
-const { appid = '' } = query()
-if (appid) localStorage.setItem('appid', appid)
 
 const ins = axios.create({
   baseURL,
@@ -16,13 +11,12 @@ const ins = axios.create({
 ins.interceptors.response.use(
   ({ data }) => {
     const { code } = data
-    // 从用户体验来说，尽量别弹框报错，而是引导至错误页
-    if (code !== 0) rejectHttpError(data)
+    if (code !== 1) rejectHttpError(data)
     return data
   },
   error => {
     if (error.response) {
-      // 有返回但不是2xx
+      // HTTP code error
       const { data } = error.response
       rejectHttpError(data)
       return data
@@ -38,8 +32,6 @@ ins.interceptors.response.use(
 )
 
 export default ins
-
-// 请求默认走 node，以 /api 开头的会自动转发 java
 
 function rejectHttpError(obj) {
   window.Bluebird.reject(obj)
