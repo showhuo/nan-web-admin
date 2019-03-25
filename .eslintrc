@@ -1,0 +1,14 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["react-app", "plugin:prettier/recommended"],
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "semi": false
+      }
+    ],
+    "react/jsx-one-expression-per-line": 0
+  }
+}
