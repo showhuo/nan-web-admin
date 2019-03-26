@@ -7,6 +7,7 @@ export default function CoreRouter() {
     <Switch>
       <Route component={lazyloader('demo')} path="/demo" />
       <Route component={lazyloader('login')} path="/login" />
+      <Route component={lazyloader('check-in')} path="/check-in" />
       <Redirect to="/demo" />
     </Switch>
   )
