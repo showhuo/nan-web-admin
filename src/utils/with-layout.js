@@ -1,7 +1,9 @@
 import React from 'react'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd'
+import history from '../utils/history'
+import './with-layout.less'
 
-const { Header, Content, Footer, Sider } = Layout
+const { Header, Footer, Sider } = Layout
 const SubMenu = Menu.SubMenu
 export default function withLayout(WrappedComponent) {
   return class extends React.Component {
@@ -15,17 +17,45 @@ export default function withLayout(WrappedComponent) {
     }
     componentDidMount() {
       // TODO 获取菜单权限数据
+      // TODO 检查登录状态
+    }
+
+    logout = uid => {
+      // TODO 退出登录
+    }
+
+    getBreadcrumbs = () => {
+      const { pathname } = window.location
+      const breadcrumbMap = {
+        'check-in': ['客群维护', '日历签到'],
+        lottery: ['营销玩法', '幸运大抽奖']
+      }
+      for (const key in breadcrumbMap) {
+        if (breadcrumbMap.hasOwnProperty(key) && pathname.includes(key)) {
+          const arr = breadcrumbMap[key]
+          return arr.map((ele, i) => (
+            <Breadcrumb.Item key={i}>{ele}</Breadcrumb.Item>
+          ))
+        }
+      }
     }
     render() {
       return (
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout style={{ minHeight: '100vh' }} className="the-layout">
           <Sider
             collapsible
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
           >
             <div className="logo" />
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+            <Menu
+              theme="dark"
+              defaultSelectedKeys={['1']}
+              mode="inline"
+              onClick={({ key }) => {
+                history.push(key)
+              }}
+            >
               <SubMenu
                 key="sub1"
                 title={
@@ -35,7 +65,7 @@ export default function withLayout(WrappedComponent) {
                   </span>
                 }
               >
-                <Menu.Item key="3">抽奖类</Menu.Item>
+                <Menu.Item key="/lottery">幸运大抽奖</Menu.Item>
               </SubMenu>
               <SubMenu
                 key="sub2"
@@ -46,11 +76,25 @@ export default function withLayout(WrappedComponent) {
                   </span>
                 }
               >
-                <Menu.Item key="6">日历签到</Menu.Item>
+                <Menu.Item key="/check-in">日历签到</Menu.Item>
               </SubMenu>
             </Menu>
           </Sider>
-          <WrappedComponent />
+          <Layout>
+            <Header style={{ background: '#fff', padding: 0 }}>
+              <Breadcrumb style={{ margin: '16px' }}>
+                {this.getBreadcrumbs()}
+              </Breadcrumb>
+              <div className="logout" onClick={this.logout}>
+                <span className="logout-icon" />
+                <span className="logout-text">退出登录</span>
+              </div>
+            </Header>
+            <WrappedComponent />
+            <Footer style={{ textAlign: 'center' }}>
+              金钻客版权所有 ©2019
+            </Footer>
+          </Layout>
         </Layout>
       )
     }
