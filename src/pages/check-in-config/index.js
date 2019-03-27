@@ -104,7 +104,16 @@ export default class SiderDemo extends React.Component {
         </div>
         <div className="unit">
           <span className="sub-title">规则说明：</span>
-          <div className="unit-right">{/* todo */}</div>
+          <div className="unit-right">
+            <div className="rules">
+              {`1.每日签到可以获得日签奖励，在单个周期内连续签到可以获得连签奖励，
+              同1个周期内最多可领取1次；
+
+              2.每日最多可签到1次，断签则会重新计算连签天数；
+              
+              3.活动以及奖励最终解释权归商家所有。`}
+            </div>
+          </div>
         </div>
         <div className="unit">
           <span className="sub-title">入口设置：</span>
