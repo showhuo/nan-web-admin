@@ -1,5 +1,15 @@
 import React from 'react'
-import { Layout, Switch, Tabs, Checkbox, Input, InputNumber } from 'antd'
+import {
+  Layout,
+  Switch,
+  Tabs,
+  Checkbox,
+  Input,
+  InputNumber,
+  Button,
+  Divider,
+  Table
+} from 'antd'
 import './style.less'
 import publicIcon from '../../img/public-icon.png'
 
@@ -10,7 +20,18 @@ export default class SiderDemo extends React.Component {
   state = {
     toggle: false,
     dayReward: null,
-    loopCycle: 7
+    loopCycle: 7,
+    currentCycle: '无',
+    nextCycle: '无',
+    tableData: [
+      {
+        key: '1',
+        name: 'John Brown',
+        age: 32,
+        address: 'New York No. 1 Lake Park',
+        tags: ['nice', 'developer']
+      }
+    ]
   }
 
   toggle = () => {
@@ -25,7 +46,7 @@ export default class SiderDemo extends React.Component {
 
   // 基本设置
   basicConfig = () => {
-    const { dayReward, currentCycle, nextCycle } = this.state
+    const { dayReward, currentCycle, nextCycle, tableData } = this.state
     return (
       <div className="basic-config">
         <div className="title">
@@ -70,6 +91,15 @@ export default class SiderDemo extends React.Component {
             <span className="tip1">
               循环模式下，超过固定周期天数的连签奖励将不向用户展示和发放,并且同一个周期内每份奖励只能领取一次
             </span>
+            <Table
+              size="small"
+              columns={this.getColumns()}
+              dataSource={tableData}
+              pagination={false}
+            />
+            <p className="clickable" onClick={this.addContinueRow}>
+              +新增连续奖励
+            </p>
           </div>
         </div>
         <div className="unit">
@@ -84,7 +114,9 @@ export default class SiderDemo extends React.Component {
     )
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    // TODO 获取之前的设置数据
+  }
 
   render() {
     const { toggle } = this.state
@@ -109,4 +141,53 @@ export default class SiderDemo extends React.Component {
       </Content>
     )
   }
+
+  getColumns = () => {
+    return [
+      {
+        title: '连签天数',
+        dataIndex: 'age',
+        key: 'age'
+      },
+      {
+        title: '连签奖励',
+        dataIndex: 'address',
+        key: 'address'
+      },
+      {
+        title: '操作',
+        key: 'action',
+        render: (text, record) => (
+          <span>
+            <Button
+              size="small"
+              onClick={() => {
+                this.openModal('continuous', record)
+              }}
+            >
+              更改
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              size="small"
+              onClick={() => {
+                this.deleteContinuRow(record)
+              }}
+            >
+              移除
+            </Button>
+          </span>
+        )
+      }
+    ]
+  }
+
+  // 弹框函数
+  openModal = (type, record) => {
+    // TODO 根据 type 展示不同弹框
+  }
+  // TODO 删除连签奖励行
+  deleteContinuRow = obj => {}
+  // TODO 新增连签奖励行
+  addContinueRow = () => {}
 }
