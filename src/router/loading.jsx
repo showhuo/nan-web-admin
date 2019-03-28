@@ -1,6 +1,7 @@
 import React from 'react'
 import NProgress from 'nprogress'
 import PropTypes from 'prop-types'
+import { Icon } from 'antd'
 
 const Loading = ({ error }) => {
   if (error) {
@@ -15,14 +16,9 @@ const Loading = ({ error }) => {
           flexDirection: 'row'
         }}
       >
-        <div style={{ width: 450 }}>
-          <img
-            src="https://s1.wacdn.com/wis/506/e8fc685bc182bead_422x193.png"
-            alt="loading"
-          />
-        </div>
-        <div style={{ color: '#434e59', fontSize: 50, fontWeight: 700 }}>
-          页面咔嚓了:(
+        <Icon type="loading" />
+        <div style={{ color: '#434e59', fontWeight: 700 }}>
+          页面加载失败，请过段时间再来:(
         </div>
       </div>
     )
