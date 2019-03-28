@@ -11,6 +11,7 @@
     "immutable": "^3.8.2",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
