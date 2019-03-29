@@ -4,7 +4,6 @@ import {
   Switch,
   Tabs,
   Checkbox,
-  Input,
   InputNumber,
   Button,
   Divider,
@@ -14,7 +13,7 @@ import {
 } from 'antd'
 import _ from 'lodash'
 import './style.less'
-import publicIcon from '../../img/public-icon.png'
+import Ads from './ad'
 
 const { Content } = Layout
 const { TabPane } = Tabs
@@ -225,16 +224,16 @@ export default class SiderDemo extends React.Component {
         style={{ margin: '2rem', background: '#fff', padding: 0 }}
       >
         <div className="header">
-          <p>日历签到</p>
-          <p>{toggle ? '已开启' : '已关闭'}</p>
-          <Switch onChange={this.toggle} />
+          <span className="title">日历签到</span>
+          <span className="text">{toggle ? '已开启' : '已关闭'}</span>
+          <Switch onChange={this.toggle} className="title-switch" />
         </div>
         <Tabs defaultActiveKey="1">
           <TabPane tab="签到设置" key="1">
             {this.basicConfig()}
           </TabPane>
           <TabPane tab="签到页配置" key="2">
-            Content of Tab Pane 2
+            <Ads />
           </TabPane>
         </Tabs>
       </Content>

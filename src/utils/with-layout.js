@@ -46,6 +46,12 @@ export default function withLayout(WrappedComponent) {
             collapsible
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
+            style={{
+              overflow: 'auto',
+              height: '100vh',
+              position: 'fixed',
+              left: 0
+            }}
           >
             <div className="logo" />
             <Menu
@@ -80,7 +86,11 @@ export default function withLayout(WrappedComponent) {
               </SubMenu>
             </Menu>
           </Sider>
-          <Layout>
+          <Layout
+            style={
+              this.state.collapsed ? { marginLeft: 80 } : { marginLeft: 200 }
+            }
+          >
             <Header style={{ background: '#fff', padding: 0 }}>
               <Breadcrumb style={{ margin: '2rem 3rem' }}>
                 {this.getBreadcrumbs()}
