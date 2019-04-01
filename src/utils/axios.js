@@ -1,24 +1,28 @@
 import axios from 'axios'
 import { baseURL } from '../config'
+import { message } from 'antd'
 
 const ins = axios.create({
   baseURL,
   headers: {
-    'Content-Type': 'application/json;charset=utf-8'
+    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
   }
 })
 
 ins.interceptors.response.use(
   ({ data }) => {
-    const { code } = data
-    if (code !== 1) rejectHttpError(data)
-    return data
+    const { Code, Result, Tips } = data
+    if (Code !== '1') {
+      message.error(Tips)
+      return
+    }
+    return Result
   },
   error => {
     if (error.response) {
-      // HTTP code error
+      // HTTP Code error
       const { data } = error.response
-      rejectHttpError(data)
+      message.error(data)
       return data
       /* eslint-disable no-console */
     } else if (error.request) {
@@ -32,7 +36,3 @@ ins.interceptors.response.use(
 )
 
 export default ins
-
-function rejectHttpError(obj) {
-  window.Bluebird.reject(obj)
-}

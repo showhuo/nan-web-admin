@@ -1,6 +1,5 @@
 import 'babel-polyfill'
 import './bluebird'
-import './unhandledrejection'
 import 'normalize.css'
 
 window.onload = function() {
@@ -8,10 +7,7 @@ window.onload = function() {
       为了以后好算,比如，你测量的一个宽度是10px,就可以写为1rem,以及1px=0.1rem等等*/
   getRem(1920, 10)
 }
-// 这里最好使用节流函数 throttle 包装
-window.onresize = function() {
-  getRem(1920, 10)
-}
+
 function getRem(pwidth, prem) {
   var html = document.getElementsByTagName('html')[0]
   var oWidth = document.body.clientWidth || document.documentElement.clientWidth

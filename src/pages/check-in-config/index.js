@@ -14,6 +14,9 @@ import {
 import _ from 'lodash'
 import './style.less'
 import Ads from './ad'
+import qs from '../../utils/qs'
+import axios from '../../utils/axios'
+import uuid from 'uuid/v4'
 
 const { Content } = Layout
 const { TabPane } = Tabs
@@ -27,51 +30,66 @@ const formItemLayout = {
   }
 }
 
-export default class SiderDemo extends React.Component {
+export default class CheckInConfig extends React.Component {
   state = {
-    toggle: false,
-    dayReward: null,
-    loopCycle: 7,
-    currentCycle: '无',
+    ActiveState: false,
+    RewardValue: null,
+    IsLoopModel: false,
+    CycleDay: 7,
+    nowCycle: '无',
     nextCycle: '无',
-    // 获取连续签到表格数据，如果没有 key 的话需要先统一加上
-    tableData: [
+    ContinuousRewardList: [
       {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer']
+        Day: 3,
+        Reward: 5,
+        Id: 23
       }
     ],
-    checkEntrance: true,
+    IsVipPagePopUp: true,
+    // 弹框相关临时变量
     modalType: 'setDayReward',
     modalDayReward: null,
-    key: null,
+    Id: null,
     modalContiDays: null,
     modalContiReward: null
   }
 
-  toggle = () => {
+  componentDidMount() {
+    // 获取之前的设置数据
+    const WxSeetingId = qs().WxSeetingId || ''
+    axios
+      .get('/api/Active_SignIn/InitAsync', {
+        params: { 'param.wxSeetingId': WxSeetingId }
+      })
+      .then(result => {
+        this.setState(result)
+      })
+  }
+
+  ActiveState = () => {
     this.setState({
-      toggle: !this.state.toggle
+      ActiveState: !this.state.ActiveState
     })
   }
 
-  setLoopCycle = loopCycle => {
-    this.setState({ loopCycle })
+  clickLoopCheckBox = () => {
+    this.setState({ IsLoopModel: !this.state.IsLoopModel })
+  }
+
+  setLoopCycle = CycleDay => {
+    this.setState({ CycleDay })
   }
 
   // 基本设置页内容
   basicConfig = () => {
     const {
-      dayReward,
-      currentCycle,
+      RewardValue,
+      nowCycle,
       nextCycle,
-      tableData,
+      ContinuousRewardList,
       modalType,
       modalVisible,
-      key,
+      Id,
       modalContiDays,
       modalContiReward,
       modalDayReward
@@ -87,11 +105,11 @@ export default class SiderDemo extends React.Component {
         <div className="unit">
           <span className="sub-title">日签奖励：</span>
           <div className="unit-right">
-            <span>{dayReward || '无'}</span>
+            <span>{RewardValue || '无'}</span>
             <span
               className="clickable"
               onClick={() => {
-                this.openModal('setDayReward', { dayReward })
+                this.openModal('setDayReward', { RewardValue })
               }}
             >
               {' 设置'}
@@ -112,7 +130,7 @@ export default class SiderDemo extends React.Component {
               </span>
             </div>
             <p style={{ marginTop: '1.6rem' }}>
-              当前周期：{currentCycle}， 下一周期：{nextCycle}
+              当前周期：{nowCycle}， 下一周期：{nextCycle}
             </p>
             <p className="tip1">
               *温馨提示：开启、关闭活更改固定周期，该设置将在次日0:00生效*
@@ -127,8 +145,9 @@ export default class SiderDemo extends React.Component {
             </span>
             <Table
               size="small"
+              rowKey="Id"
               columns={this.getColumns()}
-              dataSource={tableData}
+              dataSource={ContinuousRewardList}
               pagination={false}
               style={{ margin: '1rem 0' }}
             />
@@ -156,7 +175,7 @@ export default class SiderDemo extends React.Component {
         <div className="unit">
           <span className="sub-title">入口设置：</span>
           <div className="unit-right">
-            <Checkbox onChange={this.checkEntrance}>
+            <Checkbox onChange={this.toggleIsVipPagePopUp}>
               未签到用户每日第1次访问会员中心时自动弹出签到弹窗
             </Checkbox>
             <p className="tip1">
@@ -169,7 +188,7 @@ export default class SiderDemo extends React.Component {
         </Button>
         <Modal
           title={isDayRewardModal ? '日签奖励' : '连签奖励'}
-          visible={this.state.modalVisible}
+          visible={modalVisible}
           onOk={() => {
             this.handleOk(isDayRewardModal)
           }}
@@ -179,7 +198,7 @@ export default class SiderDemo extends React.Component {
             {isDayRewardModal ? (
               <FormItem label="积分">
                 <InputNumber
-                  defaultValue={modalDayReward}
+                  value={modalDayReward}
                   onChange={modalDayReward => {
                     this.setState({ modalDayReward })
                   }}
@@ -190,6 +209,7 @@ export default class SiderDemo extends React.Component {
               <div>
                 <FormItem label="连续签到">
                   <InputNumber
+                    value={modalContiDays}
                     onChange={modalContiDays => {
                       this.setState({ modalContiDays })
                     }}
@@ -198,6 +218,7 @@ export default class SiderDemo extends React.Component {
                 </FormItem>
                 <FormItem label="积分">
                   <InputNumber
+                    value={modalContiReward}
                     onChange={modalContiReward => {
                       this.setState({ modalContiReward })
                     }}
@@ -212,45 +233,17 @@ export default class SiderDemo extends React.Component {
     )
   }
 
-  componentDidMount() {
-    // TODO 获取之前的设置数据
-  }
-
-  render() {
-    const { toggle } = this.state
-    return (
-      <Content
-        className="check-in-config"
-        style={{ margin: '2rem', background: '#fff', padding: 0 }}
-      >
-        <div className="header">
-          <span className="title">日历签到</span>
-          <span className="text">{toggle ? '已开启' : '已关闭'}</span>
-          <Switch onChange={this.toggle} className="title-switch" />
-        </div>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="签到设置" key="1">
-            {this.basicConfig()}
-          </TabPane>
-          <TabPane tab="签到页配置" key="2">
-            <Ads />
-          </TabPane>
-        </Tabs>
-      </Content>
-    )
-  }
-
   getColumns = () => {
     return [
       {
         title: '连签天数',
-        dataIndex: 'age',
-        key: 'age'
+        dataIndex: 'Day',
+        key: 'Day'
       },
       {
         title: '连签奖励',
-        dataIndex: 'address',
-        key: 'address'
+        dataIndex: 'Reward',
+        key: 'Reward'
       },
       {
         title: '操作',
@@ -269,7 +262,7 @@ export default class SiderDemo extends React.Component {
             <Button
               size="small"
               onClick={() => {
-                this.deleteContinuRow(record.key)
+                this.deleteContinuRow(record.Id)
               }}
             >
               移除
@@ -282,64 +275,113 @@ export default class SiderDemo extends React.Component {
 
   // 弹框函数，日签设置、连签修改、连签新增，三合一
   openModal = (modalType, obj = {}) => {
-    const { key, modalContiDays, modalContiReward, modalDayReward } = obj
+    const { Id = 0, Day = 0, Reward = 0, RewardValue } = obj
     this.setState({
       modalType,
       modalVisible: true,
-      key,
-      modalContiDays,
-      modalContiReward,
-      modalDayReward
+      Id,
+      modalContiDays: Day,
+      modalContiReward: Reward,
+      modalDayReward: RewardValue
     })
   }
   handleOk = isDayRewardModal => {
-    // 将 modal 临时数值存储，修改 tableData 数组
+    // 将 modal 临时数值存储，修改 ContinuousRewardList 数组
     const {
       modalType,
-      key,
+      Id,
       modalContiDays,
       modalContiReward,
       modalDayReward,
-      tableData
+      ContinuousRewardList
     } = this.state
     if (isDayRewardModal) {
-      this.setState({ dayReward: modalDayReward })
+      this.setState({ RewardValue: modalDayReward })
     } else {
       // 是否为新增
       const isNewRow = modalType === 'newContinue'
       if (isNewRow) {
-        const newTableData = tableData.push({
-          key: tableData.length + 1
-          // TODO 构造新row
+        const newTableData = ContinuousRewardList.concat()
+        newTableData.push({
+          Id: uuid(),
+          Day: modalContiDays,
+          Reward: modalContiReward
         })
-        this.setState({ tableData: newTableData })
+        this.setState({ ContinuousRewardList: newTableData })
       } else {
         // 修改当前 row
-        const index = _.findIndex(tableData, { key })
-        const newTableData = tableData.concat()
-        newTableData.splice(index, 1, {
-          key
-          // TODO 构造新row
-        })
-        this.setState({ tableData: newTableData })
+        const index = _.findIndex(ContinuousRewardList, { Id })
+        if (index !== -1) {
+          const newTableData = ContinuousRewardList.concat()
+          newTableData.splice(index, 1, {
+            Id,
+            Day: modalContiDays,
+            Reward: modalContiReward
+          })
+          this.setState({ ContinuousRewardList: newTableData })
+        }
       }
     }
+    this.setState({ modalVisible: false })
+    this.resetModalData()
   }
   handleCancel = () => {
     this.setState({ modalVisible: false })
   }
   // 删除连签奖励行
-  deleteContinuRow = key => {
-    const { tableData } = this.state
-    const index = _.findIndex(tableData, { key })
-    const newTableData = tableData.concat()
-    newTableData.splice(index, 1)
-    this.setState({ tableData: newTableData })
+  deleteContinuRow = Id => {
+    Modal.confirm({
+      title: '提示',
+      content: '确定删除该条数据？',
+      onOk: () => {
+        const { ContinuousRewardList } = this.state
+        const index = _.findIndex(ContinuousRewardList, { Id })
+        if (index !== -1) {
+          const newTableData = ContinuousRewardList.concat()
+          newTableData.splice(index, 1)
+          this.setState({ ContinuousRewardList: newTableData })
+        }
+      }
+    })
   }
   // 勾选入口设置
-  checkEntrance = () => {
-    this.setState({ checkEntrance: !this.state.checkEntrance })
+  toggleIsVipPagePopUp = () => {
+    this.setState({ IsVipPagePopUp: !this.state.IsVipPagePopUp })
   }
   // TODO 保存提交基本设置
   submitBasic = () => {}
+
+  // 重置弹框数据
+  resetModalData = () => {
+    this.setState({
+      modalDayReward: null,
+      Id: null,
+      modalContiDays: null,
+      modalContiReward: null
+    })
+  }
+
+  render() {
+    const { ActiveState } = this.state
+    return (
+      <Content
+        className="check-in-config"
+        style={{ margin: '2rem', background: '#fff', padding: 0 }}
+      >
+        <div className="header">
+          <span className="title">日历签到</span>
+          <span className="text">{ActiveState ? '已开启' : '已关闭'}</span>
+          <Switch onChange={this.ActiveState} className="title-switch" />
+        </div>
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="签到设置" key="1">
+            {this.basicConfig()}
+          </TabPane>
+          <TabPane tab="签到页配置" key="2">
+            <Ads />
+          </TabPane>
+        </Tabs>
+      </Content>
+    )
+  }
 }

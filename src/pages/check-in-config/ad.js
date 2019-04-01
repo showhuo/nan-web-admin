@@ -35,6 +35,9 @@ export default class Ads extends React.Component {
       )
     }
   }
+  submitAd = () => {
+    // 图片文件已由 form action 直接提交
+  }
   render() {
     const { name, desc, imageUrl } = this.state
     return (
@@ -86,7 +89,7 @@ export default class Ads extends React.Component {
             </Form>
           </div>
         </div>
-        <Button onClick={this.submitBasic} className="save" type="primary">
+        <Button onClick={this.submitAd} className="save" type="primary">
           保存
         </Button>
       </div>
