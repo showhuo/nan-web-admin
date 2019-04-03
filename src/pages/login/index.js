@@ -22,6 +22,8 @@ class NormalLoginForm extends React.Component {
           .post(`/api/Sys_PlatForm_Account/LoginAsync?${urlParam}`)
           .then(res => {
             if (res) {
+              // 将用户 accountId 存储供后续使用
+              localStorage.setItem('accountId', res.PlatFormAccountId)
               history.push('/check-in')
             }
           })

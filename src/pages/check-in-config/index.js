@@ -74,20 +74,25 @@ export default class CheckInConfig extends React.Component {
 
   ActiveState = () => {
     // 开关行为直接上报
-    const { Id, ActiveState, AccountId } = this.state
+    const { Id, ActiveState } = this.state
+    // 取出用户标识 accountId
+    const accountId = localStorage.getItem('accountId')
     const urlParam = qs.stringify({
       'param.id': Id,
-      'param.activeState': ActiveState,
-      'param.accountId': AccountId
+      // 尝试切换开关状态
+      'param.activeState': !ActiveState,
+      'param.accountId': accountId
     })
     axios
       .post(`/api/Active_SignIn/UpdateActiveStateAsync/${Id}?${urlParam}`)
       .then(res => {
-        if (res) message.success('开关切换成功')
+        if (res) {
+          message.success('开关切换成功')
+          this.setState({
+            ActiveState: !this.state.ActiveState
+          })
+        }
       })
-    this.setState({
-      ActiveState: !this.state.ActiveState
-    })
   }
 
   clickLoopCheckBox = () => {
@@ -397,6 +402,9 @@ export default class CheckInConfig extends React.Component {
         params[`param.${lowerKey}`] = value
       }
     }
+    // 取出用户标识 accountId
+    const accountId = localStorage.getItem('accountId')
+    params['param.accountId'] = accountId
     const urlParam = qs.stringify(params)
     axios
       .post(`/api/Active_SignIn/SetAsync/${this.state.Id}?${urlParam}`)

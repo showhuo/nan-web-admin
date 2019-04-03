@@ -18,10 +18,17 @@ export default class SiderDemo extends React.Component {
   }
 
   getPublics = uid => {
-    //  TODO 获取公众号列表，应该需要带上用户标识参数
-    axios.get('/api/Active_SignIn/WxSignListAsync').then(publicList => {
-      if (publicList) this.setState({ publicList })
-    })
+    //  获取公众号列表，带上用户标识参数
+    const accountId = localStorage.getItem('accountId')
+    axios
+      .get('/api/Active_SignIn/WxSignListAsync', {
+        params: {
+          'param.plantFrom': accountId
+        }
+      })
+      .then(publicList => {
+        if (publicList) this.setState({ publicList })
+      })
   }
   clickPublic = WxSeetingId => {
     // 点击跳转url，并带上参数 id
