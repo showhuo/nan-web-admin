@@ -1,32 +1,74 @@
 import React from 'react'
 // import PropTypes from 'prop-types'
-// import axios from '../../utils/axios'
+import axios from '../../utils/axios'
 import './style.less'
-import { Icon } from 'antd'
+import { Form, Icon, Input, Button } from 'antd'
+import qs from 'qs'
+import history from '../../utils/history'
+
+class NormalLoginForm extends React.Component {
+  handleSubmit = e => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values)
+        const { account, password } = values
+        const urlParam = qs.stringify({
+          'param.loginType': 0,
+          'param.account': account,
+          'param.password': password
+        })
+        axios
+          .post(`/api/Sys_PlatForm_Account/LoginAsync?${urlParam}`)
+          .then(res => {
+            if (res) {
+              history.push('/check-in')
+            }
+          })
+      }
+    })
+  }
+
+  render() {
+    const { getFieldDecorator } = this.props.form
+    return (
+      <Form onSubmit={this.handleSubmit} className="login-form">
+        <Form.Item label="账号">
+          {getFieldDecorator('account', {
+            rules: [{ required: true, message: 'Please input your username!' }]
+          })(
+            <Input
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Username"
+            />
+          )}
+        </Form.Item>
+        <Form.Item label="密码">
+          {getFieldDecorator('password', {
+            rules: [{ required: true, message: 'Please input your Password!' }]
+          })(
+            <Input
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type="password"
+              placeholder="Password"
+            />
+          )}
+        </Form.Item>
+
+        <Button type="primary" htmlType="submit" className="login-form-button">
+          Log in
+        </Button>
+      </Form>
+    )
+  }
+}
+
+const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(
+  NormalLoginForm
+)
 
 export default class Login extends React.Component {
-  state = {
-    status: 'fail', //init-初始化显示二维码
-    QRCodeUrl: ''
-  }
-  componentDidMount() {
-    // TODO 获取二维码
-    // TODO 开 websocket 监听登录状态
-  }
-  successOrFail = status => (
-    <div className="success-or-fail">
-      <span className={status} />
-      <p className="text">
-        {status === 'success' ? '登录中…' : '二维码已失效'}
-      </p>
-    </div>
-  )
-
-  refreshQR = () => {
-    // TODO 重新获取二维码
-  }
   render() {
-    const { status, QRCodeUrl } = this.state
     return (
       <div className="login">
         <div className="header">
@@ -38,16 +80,7 @@ export default class Login extends React.Component {
           <div className="ads" />
           <div className="content">
             <div className="scan">扫码登录</div>
-            <p className="tips">使用金钻客APP扫码登录</p>
-            {status === 'init' ? (
-              <img src={QRCodeUrl} className="qr-code" alt="qrcode" />
-            ) : (
-              this.successOrFail(status)
-            )}
-            <div className="refresh" onClick={this.refreshQR}>
-              <Icon type="reload" />
-              <span className="text">刷新</span>
-            </div>
+            <WrappedNormalLoginForm />
           </div>
         </div>
       </div>

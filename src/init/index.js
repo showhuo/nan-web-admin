@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import './bluebird'
+import './unhandledrejection'
 import 'normalize.css'
 
 window.onload = function() {

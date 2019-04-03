@@ -1,7 +1,10 @@
 // 签到页图片设置
 import React from 'react'
 import { Input, Button, Form, Upload, message, Icon } from 'antd'
-import headImgExample from '../../img/checkin-head-example.png'
+// import headImgExample from '../../img/checkin-head-example.png'
+import axios from '../../utils/axios'
+import PropTypes from 'prop-types'
+import qs from 'qs'
 
 const formItemLayout = {
   labelCol: {
@@ -11,35 +14,60 @@ const formItemLayout = {
     span: 14
   }
 }
+const headImgExample =
+  'http://jzkeyp.oss-cn-beijing.aliyuncs.com/WeiLiao/Active/SignIn/20190325/SignInBanner20190325145734576.jpg'
 export default class Ads extends React.Component {
+  static propTypes = {
+    data: PropTypes.object.isRequired
+  }
   state = {
-    name: '名称',
-    desc: '描述',
-    imageUrl: headImgExample
+    Id: '1',
+    ActiveName: '名称',
+    Describe: '描述',
+    ActiveImg: headImgExample
   }
   componentDidMount() {
-    // TODO 获取初始信息
+    const { Id, ActiveName, Describe, ActiveImg = headImgExample } =
+      this.props.data || {}
+    this.setState({ Id, ActiveName, Describe, ActiveImg })
   }
-  handleChange = info => {
-    if (info.file.status === 'uploading') {
-      this.setState({ loading: true })
-      return
+
+  beforeUpload = file => {
+    // const isJPG = file.type === 'image/jpeg'
+    // if (!isJPG) {
+    //   message.error('只能上传 JPG 文件')
+    //   return false
+    // }
+    const isLt2M = file.size / 1024 / 1024 < 2
+    if (!isLt2M) {
+      message.error('文件大小不要超过 2MB')
+      return false
     }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl =>
-        this.setState({
-          imageUrl,
-          loading: false
-        })
-      )
-    }
+    getBase64(file, ActiveImg =>
+      this.setState({
+        ActiveImg
+      })
+    )
+    return false
   }
+
   submitAd = () => {
-    // 图片文件已由 form action 直接提交
+    const { Id, ActiveName, Describe, ActiveImg } = this.state
+    const urlParam = qs.stringify({
+      'param.id': Id,
+      'param.activeName': ActiveName,
+      'param.describe': Describe,
+      'param.activeImg': ActiveImg,
+      'param.accountId': localStorage.getItem('accountId')
+    })
+    axios
+      .post(`/api/Active_SignIn/UpdatePageInfoAsync/${Id}?${urlParam}`)
+      .then(res => {
+        if (res) message.success('保存成功')
+      })
   }
   render() {
-    const { name, desc, imageUrl } = this.state
+    const { ActiveName, Describe, ActiveImg } = this.state
     return (
       <div className="ads">
         <div className="left" />
@@ -48,17 +76,17 @@ export default class Ads extends React.Component {
             <Form {...formItemLayout}>
               <Form.Item label="页面名称">
                 <Input
-                  defaultValue={name}
-                  onChange={name => {
-                    this.setState({ name })
+                  value={ActiveName}
+                  onChange={e => {
+                    this.setState({ ActiveName: e.target.value })
                   }}
                 />
               </Form.Item>
               <Form.Item label="页面描述">
                 <Input.TextArea
-                  defaultValue={desc}
-                  onChange={desc => {
-                    this.setState({ desc })
+                  value={Describe}
+                  onChange={e => {
+                    this.setState({ Describe: e.target.value })
                   }}
                 />
               </Form.Item>
@@ -67,19 +95,12 @@ export default class Ads extends React.Component {
           <div className="head-img">
             <Form {...formItemLayout}>
               <Form.Item label="页面头部">
-                <img src={imageUrl} alt="preview" className="preview" />
+                <img src={ActiveImg} alt="preview" className="preview" />
                 <br />
                 <Button onClick={this.reset} type="primary">
                   重置
                 </Button>
-                <Upload
-                  name="avatar"
-                  className="avatar-uploader"
-                  showUploadList={false}
-                  action="//jsonplaceholder.typicode.com/posts/"
-                  beforeUpload={beforeUpload}
-                  onChange={this.handleChange}
-                >
+                <Upload showUploadList={false} beforeUpload={this.beforeUpload}>
                   <Button type="primary" style={{ margin: '0 1rem' }}>
                     <Icon type="upload" /> 替换
                   </Button>
@@ -95,18 +116,6 @@ export default class Ads extends React.Component {
       </div>
     )
   }
-}
-
-function beforeUpload(file) {
-  const isJPG = file.type === 'image/jpeg'
-  if (!isJPG) {
-    message.error('只能上传 JPG 文件')
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    message.error('文件大小不要超过 2MB')
-  }
-  return isJPG && isLt2M
 }
 
 function getBase64(img, callback) {

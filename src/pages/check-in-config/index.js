@@ -9,18 +9,23 @@ import {
   Divider,
   Table,
   Modal,
-  Form
+  Form,
+  message,
+  Input,
+  Radio
 } from 'antd'
 import _ from 'lodash'
 import './style.less'
 import Ads from './ad'
-import qs from '../../utils/qs'
+import getUrlParam from '../../utils/qs'
+import qs from 'qs'
 import axios from '../../utils/axios'
 import uuid from 'uuid/v4'
 
 const { Content } = Layout
 const { TabPane } = Tabs
 const FormItem = Form.Item
+const RadioGroup = Radio.Group
 const formItemLayout = {
   labelCol: {
     span: 4
@@ -45,28 +50,41 @@ export default class CheckInConfig extends React.Component {
         Id: 23
       }
     ],
+    Note: '',
     IsVipPagePopUp: true,
     // 弹框相关临时变量
     modalType: 'setDayReward',
     modalDayReward: null,
-    Id: null,
+    modalContiRowId: null,
     modalContiDays: null,
     modalContiReward: null
   }
 
   componentDidMount() {
     // 获取之前的设置数据
-    const WxSeetingId = qs().WxSeetingId || ''
+    const WxSeetingId = getUrlParam().WxSeetingId || ''
     axios
-      .get('/api/Active_SignIn/InitAsync', {
+      .get('http://106.14.115.8:8012/api/Active_SignIn/InitAsync', {
         params: { 'param.wxSeetingId': WxSeetingId }
       })
       .then(result => {
-        this.setState(result)
+        if (result) this.setState(result)
       })
   }
 
   ActiveState = () => {
+    // 开关行为直接上报
+    const { Id, ActiveState, AccountId } = this.state
+    const urlParam = qs.stringify({
+      'param.id': Id,
+      'param.activeState': ActiveState,
+      'param.accountId': AccountId
+    })
+    axios
+      .post(`/api/Active_SignIn/UpdateActiveStateAsync/${Id}?${urlParam}`)
+      .then(res => {
+        if (res) message.success('开关切换成功')
+      })
     this.setState({
       ActiveState: !this.state.ActiveState
     })
@@ -80,6 +98,13 @@ export default class CheckInConfig extends React.Component {
     this.setState({ CycleDay })
   }
 
+  changeNote = e => {
+    this.setState({ Note: e.target.value })
+  }
+  changeLoopRadio = e => {
+    this.setState({ TakeEffectType: e.target.value })
+  }
+
   // 基本设置页内容
   basicConfig = () => {
     const {
@@ -87,9 +112,10 @@ export default class CheckInConfig extends React.Component {
       nowCycle,
       nextCycle,
       ContinuousRewardList,
+      Note,
+      TakeEffectType,
       modalType,
       modalVisible,
-      Id,
       modalContiDays,
       modalContiReward,
       modalDayReward
@@ -129,11 +155,20 @@ export default class CheckInConfig extends React.Component {
                 单个周期内，每个累计/连续签到奖励只可被领取一次
               </span>
             </div>
-            <p style={{ marginTop: '1.6rem' }}>
-              当前周期：{nowCycle}， 下一周期：{nextCycle}
-            </p>
+            <div>
+              <RadioGroup
+                onChange={this.changeLoopRadio}
+                value={TakeEffectType}
+              >
+                <Radio value={1}>本周期结束后生效</Radio>
+                <Radio value={2}>今日24:00立即生效</Radio>
+              </RadioGroup>
+            </div>
             <p className="tip1">
               *温馨提示：开启、关闭活更改固定周期，该设置将在次日0:00生效*
+            </p>
+            <p style={{ marginTop: '1.6rem' }}>
+              当前周期：{nowCycle}， 下一周期：{nextCycle}
             </p>
           </div>
         </div>
@@ -162,14 +197,11 @@ export default class CheckInConfig extends React.Component {
         <div className="unit">
           <span className="sub-title">规则说明：</span>
           <div className="unit-right">
-            <div className="rules">
-              1.每日签到可以获得日签奖励，在单个周期内连续签到可以获得连签奖励，
-              同1个周期内最多可领取1次；
-              <br />
-              2.每日最多可签到1次，断签则会重新计算连签天数；
-              <br />
-              3.活动以及奖励最终解释权归商家所有。
-            </div>
+            <Input.TextArea
+              className="rules"
+              onChange={this.changeNote}
+              value={Note}
+            />
           </div>
         </div>
         <div className="unit">
@@ -199,6 +231,7 @@ export default class CheckInConfig extends React.Component {
               <FormItem label="积分">
                 <InputNumber
                   value={modalDayReward}
+                  min={1}
                   onChange={modalDayReward => {
                     this.setState({ modalDayReward })
                   }}
@@ -209,6 +242,7 @@ export default class CheckInConfig extends React.Component {
               <div>
                 <FormItem label="连续签到">
                   <InputNumber
+                    min={1}
                     value={modalContiDays}
                     onChange={modalContiDays => {
                       this.setState({ modalContiDays })
@@ -218,6 +252,7 @@ export default class CheckInConfig extends React.Component {
                 </FormItem>
                 <FormItem label="积分">
                   <InputNumber
+                    min={1}
                     value={modalContiReward}
                     onChange={modalContiReward => {
                       this.setState({ modalContiReward })
@@ -275,11 +310,11 @@ export default class CheckInConfig extends React.Component {
 
   // 弹框函数，日签设置、连签修改、连签新增，三合一
   openModal = (modalType, obj = {}) => {
-    const { Id = 0, Day = 0, Reward = 0, RewardValue } = obj
+    const { Id = 1, Day = 1, Reward = 1, RewardValue } = obj
     this.setState({
       modalType,
       modalVisible: true,
-      Id,
+      modalContiRowId: Id,
       modalContiDays: Day,
       modalContiReward: Reward,
       modalDayReward: RewardValue
@@ -289,7 +324,7 @@ export default class CheckInConfig extends React.Component {
     // 将 modal 临时数值存储，修改 ContinuousRewardList 数组
     const {
       modalType,
-      Id,
+      modalContiRowId,
       modalContiDays,
       modalContiReward,
       modalDayReward,
@@ -310,11 +345,11 @@ export default class CheckInConfig extends React.Component {
         this.setState({ ContinuousRewardList: newTableData })
       } else {
         // 修改当前 row
-        const index = _.findIndex(ContinuousRewardList, { Id })
+        const index = _.findIndex(ContinuousRewardList, { Id: modalContiRowId })
         if (index !== -1) {
           const newTableData = ContinuousRewardList.concat()
           newTableData.splice(index, 1, {
-            Id,
+            Id: modalContiRowId,
             Day: modalContiDays,
             Reward: modalContiReward
           })
@@ -348,21 +383,40 @@ export default class CheckInConfig extends React.Component {
   toggleIsVipPagePopUp = () => {
     this.setState({ IsVipPagePopUp: !this.state.IsVipPagePopUp })
   }
-  // TODO 保存提交基本设置
-  submitBasic = () => {}
+  // 保存提交基本设置
+  submitBasic = () => {
+    // 将 state key 首字母小写，为了构造 post body : params
+    const copyState = Object.assign({}, this.state)
+    const params = {
+      'param.id': null
+    }
+    for (const key in copyState) {
+      if (copyState.hasOwnProperty(key)) {
+        const value = copyState[key]
+        const lowerKey = key[0].toLocaleLowerCase() + key.slice(1)
+        params[`param.${lowerKey}`] = value
+      }
+    }
+    const urlParam = qs.stringify(params)
+    axios
+      .post(`/api/Active_SignIn/SetAsync/${this.state.Id}?${urlParam}`)
+      .then(res => {
+        if (res) message.success('保存成功')
+      })
+  }
 
   // 重置弹框数据
   resetModalData = () => {
     this.setState({
       modalDayReward: null,
-      Id: null,
+      modalContiRowId: null,
       modalContiDays: null,
       modalContiReward: null
     })
   }
 
   render() {
-    const { ActiveState } = this.state
+    const { ActiveState, ActiveName, Describe, ActiveImg, Id } = this.state
     return (
       <Content
         className="check-in-config"
@@ -371,14 +425,18 @@ export default class CheckInConfig extends React.Component {
         <div className="header">
           <span className="title">日历签到</span>
           <span className="text">{ActiveState ? '已开启' : '已关闭'}</span>
-          <Switch onChange={this.ActiveState} className="title-switch" />
+          <Switch
+            onChange={this.ActiveState}
+            className="title-switch"
+            checked={ActiveState}
+          />
         </div>
         <Tabs defaultActiveKey="1">
           <TabPane tab="签到设置" key="1">
             {this.basicConfig()}
           </TabPane>
           <TabPane tab="签到页配置" key="2">
-            <Ads />
+            <Ads data={{ ActiveImg, ActiveName, Describe, Id }} />
           </TabPane>
         </Tabs>
       </Content>

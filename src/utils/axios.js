@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { baseURL } from '../config'
-import { message } from 'antd'
 
 const ins = axios.create({
   baseURL,
@@ -13,8 +12,8 @@ ins.interceptors.response.use(
   ({ data }) => {
     const { Code, Result, Tips } = data
     if (Code !== '1') {
-      message.error(Tips)
-      return
+      throwCustomError(Tips)
+      return null
     }
     return Result
   },
@@ -22,8 +21,7 @@ ins.interceptors.response.use(
     if (error.response) {
       // HTTP Code error
       const { data } = error.response
-      message.error(data)
-      return data
+      throwCustomError(data)
       /* eslint-disable no-console */
     } else if (error.request) {
       console.log('The request was made but no response was received')
@@ -34,5 +32,9 @@ ins.interceptors.response.use(
     }
   }
 )
+
+function throwCustomError(info) {
+  window.Bluebird.reject(info)
+}
 
 export default ins
