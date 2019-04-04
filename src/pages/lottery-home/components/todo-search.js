@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Row, Col, Button, DatePicker, Select, Input } from 'antd'
+import history from '../../../utils/history'
 
 const { RangePicker } = DatePicker
 const drawActiveStateArr = [
@@ -23,23 +24,23 @@ class UserSearch extends React.Component {
     const { getFieldDecorator } = form
     const formItemLayout = {
       labelCol: { span: 6 },
-      wrapperCol: { span: 18 }
+      wrapperCol: { span: 12 }
     }
 
     return (
-      <Form onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit} {...formItemLayout}>
         <Row gutter={8}>
           <Col span={8}>
-            <Form.Item label="起止时间" {...formItemLayout}>
+            <Form.Item label="起止时间">
               {getFieldDecorator('time')(<RangePicker />)}
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="状态" {...formItemLayout}>
+            <Form.Item label="状态">
               {getFieldDecorator('param.drawActiveState', { initialValue: '' })(
                 <Select>
                   {drawActiveStateArr.map((item, index) => (
-                    <Select.Option key={index} value={item.value.toString()}>
+                    <Select.Option key={index} value={item.value}>
                       {item.label}
                     </Select.Option>
                   ))}
@@ -48,12 +49,12 @@ class UserSearch extends React.Component {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="public" {...formItemLayout}>
+            <Form.Item label="公众号">
               {getFieldDecorator('param.wxSeetingId', { initialValue: '' })(
                 <Select>
                   {publicArr.map((item, index) => (
-                    <Select.Option key={index} value={item.value.toString()}>
-                      {item.name}
+                    <Select.Option key={index} value={item.WxSeetingId}>
+                      {item.WxPublicName}
                     </Select.Option>
                   ))}
                 </Select>
@@ -64,28 +65,37 @@ class UserSearch extends React.Component {
 
         <Row gutter={8} className="actions">
           <Col span={8}>
-            <Form.Item label="关键词" {...formItemLayout}>
+            <Form.Item label="关键词">
               {getFieldDecorator('param.keyWord')(<Input />)}
             </Form.Item>
           </Col>
-          <Form.Item wrapperCol={{ offset: 2 }}>
-            <Button
-              type="primary"
-              icon="search"
-              loading={loading}
-              htmlType="submit"
-            >
-              查询
-            </Button>
-
-            <Button
-              type="default"
-              icon="reload"
-              onClick={() => form.resetFields()}
-            >
-              重置
-            </Button>
-          </Form.Item>
+          <Col span={8}>
+            <Form.Item wrapperCol={{ offset: 6 }}>
+              <Button
+                type="primary"
+                icon="search"
+                loading={loading}
+                htmlType="submit"
+              >
+                查询
+              </Button>
+              <Button
+                type="default"
+                icon="reload"
+                onClick={() => form.resetFields()}
+                style={{ marginLeft: '2rem' }}
+              >
+                重置
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item wrapperCol={{ offset: 6 }}>
+              <Button type="primary" onClick={this.createNewLottery}>
+                创建新的幸运大抽奖
+              </Button>
+            </Form.Item>
+          </Col>
         </Row>
       </Form>
     )
@@ -109,6 +119,9 @@ class UserSearch extends React.Component {
         query(params)
       }
     })
+  }
+  createNewLottery = () => {
+    history.push('/lottery-choose-public')
   }
 }
 

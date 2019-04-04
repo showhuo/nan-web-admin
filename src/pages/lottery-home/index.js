@@ -28,19 +28,29 @@ class TodoPage extends React.Component {
       'param.platFormId': accountId
     })
     const urlParam = qs.stringify(newObj)
+    // 表格数据
     axios.post(`/api/Active_LuckDraw/ListAsync?${urlParam}`).then(res => {
       if (res) {
         this.setState({ list: res.data, loading: false })
       }
     })
-    // TODO 拉取 publicArr
+    // 公众号
+    axios
+      .get('/api/Active_LuckDraw/WxSignListAsync', {
+        params: {
+          'param.plantFrom': accountId
+        }
+      })
+      .then(publicArr => {
+        if (publicArr) this.setState({ publicArr })
+      })
   }
 
   render() {
     const { query } = this
     const { list, publicArr, loading } = this.state
     return (
-      <Content>
+      <Content style={{ margin: '2rem' }}>
         {/* 查询条件 */}
         <Search loading={loading} query={query} publicArr={publicArr} />
 

@@ -4,6 +4,7 @@ import { Table, message } from 'antd'
 import history from '../../../utils/history'
 import axios from '../../../utils/axios'
 import qs from 'qs'
+import copyTextToClipboard from '../../../utils/copy-to-clipboard'
 
 const accountId = localStorage.getItem('accountId')
 
@@ -42,27 +43,40 @@ export default class TodoList extends React.Component {
         title: '序号'
       },
       {
-        dataIndex: 'uid',
+        dataIndex: 'qrcode',
         title: '二维码/链接',
         render: (text, record) => {
           // TODO 链接、二维码、复制按钮
+          const { LinkUrl, QrcodeUrl } = record
+          return (
+            <div>
+              {LinkUrl}
+              <img src={QrcodeUrl} alt="qrcode" />
+              <span
+                onClick={copyTextToClipboard(LinkUrl)}
+                style={{ color: 'rgba(66, 136, 255, 1)' }}
+              >
+                复制链接
+              </span>
+            </div>
+          )
         }
       },
-      { dataIndex: 'luckDrawId', title: '活动编号' },
+      { dataIndex: 'Id', title: '活动编号' },
       {
-        dataIndex: 'activeName',
+        dataIndex: 'ActiveName',
         title: '名称'
       },
       {
-        dataIndex: 'drawActiveState',
+        dataIndex: 'ActiveState',
         title: '活动状态'
       },
       {
-        dataIndex: 'beginTime',
+        dataIndex: 'BeginTime',
         title: '开始时间'
       },
       {
-        dataIndex: 'endTime',
+        dataIndex: 'EndTime',
         title: '结束时间'
       },
       {
