@@ -1,30 +1,45 @@
-.lottery-create {
-  .tips {
-    margin: 3rem 0 2rem 3rem;
+.lottery {
+  position: relative;
+
+  .step0 {
+    .tips {
+      margin: 3rem 0 2rem 3rem;
+    }
+    .public {
+      display: inline-block;
+      position: relative;
+      width: 14rem;
+      height: 14rem;
+      background: rgba(242, 242, 242, 1);
+      border-radius: 1rem;
+      margin-left: 4rem;
+      text-align: center;
+      .logo {
+        width: 8rem;
+        height: 8rem;
+        margin-top: 2rem;
+      }
+    }
   }
-  .public {
-    display: inline-block;
-    position: relative;
-    width: 14rem;
-    height: 14rem;
+  .lottery-img-title {
+    position: absolute;
+    top: 16rem;
+    left: 48rem;
+  }
+  .lottery-img {
+    position: absolute;
+    width: 28rem;
+    height: 67rem;
+    top: 19rem;
+    left: 37rem;
+  }
+
+  .the-form {
+    position: absolute;
+    width: 60rem;
+    top: 16rem;
+    left: 67rem;
     background: rgba(242, 242, 242, 1);
     border-radius: 1rem;
-    margin-left: 4rem;
-    text-align: center;
-    .logo {
-      width: 8rem;
-      height: 8rem;
-      margin-top: 2rem;
-    }
-    .activated-icon {
-      display: inline-block;
-      position: absolute;
-      width: 6rem;
-      height: 6rem;
-      right: 0;
-      top: 0;
-      background-image: url("../../img/activated.png");
-      background-size: cover;
-    }
   }
 }

@@ -1,13 +1,11 @@
+// 选中公众号
 import React from 'react'
-import { Layout, Steps } from 'antd'
 import axios from '../../../utils/axios'
 import history from '../../../utils/history'
-import './style.less'
 import publicIcon from '../../../img/public-icon.png'
 
-export default class SiderDemo extends React.Component {
+export default class ChoosePublic extends React.Component {
   state = {
-    currentStep: 0,
     publicList: [
       { WxPublicName: 'A', ActiveState: 'activated', WxImg: publicIcon },
       { WxPublicName: 'B', ActiveState: 'activated1', WxImg: publicIcon },
@@ -56,7 +54,7 @@ export default class SiderDemo extends React.Component {
       )
     })
     return (
-      <div className="lottery-create">
+      <div className="step0">
         <div className="tips">请选择要创建幸运大抽奖的公众号</div>
         <div className="publicList">{publicList}</div>
       </div>

@@ -21,7 +21,9 @@ ins.interceptors.response.use(
     if (error.response) {
       // HTTP Code error
       const { data } = error.response
-      throwCustomError(data)
+      const { Tips } = data
+      throwCustomError(Tips)
+      return null
       /* eslint-disable no-console */
     } else if (error.request) {
       console.log('The request was made but no response was received')
