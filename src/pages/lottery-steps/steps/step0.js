@@ -29,7 +29,7 @@ export default class ChoosePublic extends React.Component {
   }
   clickPublic = WxSeetingId => {
     // 点击跳转url，并带上参数 id
-    history.push(`/lottery-steps?step=1&WxSeetingId=${WxSeetingId}`)
+    history.push(`/lottery-steps?step=1&wxSeetingId=${WxSeetingId}`)
   }
 
   componentDidMount() {

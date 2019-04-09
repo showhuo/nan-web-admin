@@ -1,4 +1,4 @@
-// 创建活动
+// 设置奖品
 import React from 'react'
 import PropTypes from 'prop-types'
 import axios from '../../../utils/axios'
@@ -11,10 +11,13 @@ import {
   Radio,
   InputNumber,
   Checkbox,
-  Button
+  Button,
+  Row,
+  Col
 } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
 import getUrlParam from '../../../utils/qs'
+import _ from 'lodash'
 
 const { RangePicker } = DatePicker
 
@@ -27,10 +30,11 @@ const formItemLayout = {
   }
 }
 
-class Step1 extends React.Component {
+class Step2 extends React.Component {
   static propTypes = {
     details: PropTypes.object.isRequired,
-    form: PropTypes.object.isRequired
+    form: PropTypes.object.isRequired,
+    changeNoPercent: PropTypes.func.isRequired
   }
 
   onSubmit = e => {
@@ -71,7 +75,12 @@ class Step1 extends React.Component {
   render() {
     const { details = {}, form } = this.props
     const { getFieldDecorator } = form
-    const { ActiveName, Comment, FreeType, CostIntegral } = details
+    const { Prize = [] } = details
+    const firstObj = _.find(Prize, { LevelName: '一等奖' }) || {}
+    const secondObj = _.find(Prize, { LevelName: '二等奖' }) || {}
+    const thirdObj = _.find(Prize, { LevelName: '三等奖' }) || {}
+    const fourthObj = _.find(Prize, { LevelName: '未中奖' }) || {}
+
     const rangeConfig = {
       initialValue: []
       // rules: [{ type: 'array', required: true, message: 'Please select time!' }]
@@ -82,58 +91,52 @@ class Step1 extends React.Component {
         <img src={imgurl} alt="lottery" className="lottery-img" />
         <Form {...formItemLayout} onSubmit={this.onSubmit} className="the-form">
           <p style={{ textAlign: 'center', fontSize: '1.6rem' }}>
-            ---------------------- 活动概要 ----------------------
+            ---------------------- 中奖概率 ----------------------
           </p>
-          <Form.Item label="活动名称">
-            {getFieldDecorator('activeName', {
-              initialValue: ActiveName
-            })(<Input required />)}
-          </Form.Item>
-          <Form.Item label="活动时间">
-            {getFieldDecorator('range-time-picker', rangeConfig)(
-              <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-            )}
-          </Form.Item>
-          <Form.Item label="活动说明">
-            {getFieldDecorator('comment', {
-              initialValue: Comment
-            })(<Input.TextArea />)}
-          </Form.Item>
-          <p
-            className="the-tips"
-            style={{ display: 'inline-block', margin: '-4rem 3rem 3rem 15rem' }}
-          >
-            用户通过微信分享给朋友时，会自动显示页面描述
-          </p>
+          <Row>
+            <Col span={12}>
+              <Form.Item label="一等奖">
+                {getFieldDecorator('firstPercent', {
+                  initialValue: firstObj.Percent
+                })(<Input required />)}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="二等奖">
+                {getFieldDecorator('secondPercent', {
+                  initialValue: secondObj.Percent
+                })(<Input required />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row>
+            <Col span={12}>
+              <Form.Item label="三等奖">
+                {getFieldDecorator('thirdPercent', {
+                  initialValue: thirdObj.Percent
+                })(<Input required />)}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="未中奖">{fourthObj.Percent}</Form.Item>
+            </Col>
+          </Row>
+
           <p style={{ textAlign: 'center', fontSize: '1.6rem' }}>
-            ------------------- 用户参与设置 -------------------
+            ------------------- 设置奖品 -------------------
           </p>
-          <Form.Item label="免费参与次数">
-            {getFieldDecorator('freeType', {
-              initialValue: FreeType
-            })(
-              <Radio.Group>
-                <Radio value={1}>一人一次</Radio>
-              </Radio.Group>
-            )}
-          </Form.Item>
-          <Form.Item label="允许使用积分">
+
+          <Form.Item label="">
             {getFieldDecorator('checkedCostIntegral', {
-              initialValue: !!CostIntegral || CostIntegral === 0
-            })(<Checkbox />)}
+              initialValue: true
+            })(<Checkbox>积分奖品</Checkbox>)}
           </Form.Item>
-          <Form.Item label="消耗积分">
-            {getFieldDecorator('costIntegral', {
-              initialValue: CostIntegral
+          <Form.Item label="积分数量">
+            {getFieldDecorator('prizeValue', {
+              initialValue: firstObj.PrizeValue
             })(<InputNumber />)}
           </Form.Item>
-          <Form.Item label="温馨提示" className="the-tips">
-            <span>未勾选，那么用户将无法使用积分购买抽奖机会；</span>
-            <span>
-              已勾选，那么用户将消耗输入框内数量的积分购买一次新的抽奖机会；
-            </span>
-            <span>填写为零则代表客户将可以无限抽奖（请慎重）</span>
-          </Form.Item>
+
           <Form.Item wrapperCol={{ offset: 6 }}>
             <Button htmlType="submit" type="primary">
               下一步
@@ -145,4 +148,4 @@ class Step1 extends React.Component {
   }
 }
 
-export default Form.create()(Step1)
+export default Form.create()(Step2)
