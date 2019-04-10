@@ -29,7 +29,10 @@ const formItemLayout = {
 
 class Step1 extends React.Component {
   static propTypes = {
+    wxSeetingId: PropTypes.number.isRequired,
     details: PropTypes.object.isRequired,
+    changeStep: PropTypes.func.isRequired,
+    saveLuckDrawId: PropTypes.func.isRequired,
     form: PropTypes.object.isRequired
   }
 
@@ -38,7 +41,7 @@ class Step1 extends React.Component {
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
         // 调整必要参数
-        const wxSeetingId = getUrlParam()['wxSeetingId']
+        const wxSeetingId = this.props.wxSeetingId
         const accountId = localStorage.getItem('accountId')
         values['startTime'] = values['range-time-picker'][0].format(
           'YYYY-MM-DD HH:mm:ss'
@@ -46,7 +49,7 @@ class Step1 extends React.Component {
         values['endTime'] = values['range-time-picker'][1].format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        values['wxSeetingId'] = wxSeetingId
+
         values['accountId'] = accountId
         values['freeType'] = 1
         // 删除无用参数
@@ -54,16 +57,32 @@ class Step1 extends React.Component {
         if (!values['checkedCostIntegral']) {
           delete values['costIntegral']
         }
-        const urlParam = assembleParams(values)
-        console.log(urlParam)
-        // 提交数据，成功后会返回活动id，带上跳转下一步 step2
-        axios
-          .post(`/api/Active_LuckDraw/AddDrawInfoAsync?${urlParam}`)
-          .then(res => {
-            if (res) {
-              history.push(`/lottery-steps?step=2&luckDrawId=${res.LuckDrawId}`)
-            }
-          })
+        // 此处需要根据 url 参数 step === 1 区分是更新接口，否则为新建
+        const isUpdate = getUrlParam().step === '1'
+        if (isUpdate) {
+          // 更新需要 luckDrawId 参数
+          values['luckDrawId'] = getUrlParam().luckDrawId
+          const urlParam = assembleParams(values)
+          axios
+            .post(`/api/Active_LuckDraw/UpdateDrawInfoAsync?${urlParam}`)
+            .then(res => {
+              if (res) {
+                this.props.changeStep(2)
+              }
+            })
+        } else {
+          // 新建需要 wxSeetingId 参数，成功会返回 luckDrawId，需要往下传递
+          values['wxSeetingId'] = wxSeetingId
+          const urlParam = assembleParams(values)
+          axios
+            .post(`/api/Active_LuckDraw/AddDrawInfoAsync?${urlParam}`)
+            .then(res => {
+              if (res) {
+                this.props.changeStep(2)
+                this.props.saveLuckDrawId(res.LuckDrawId)
+              }
+            })
+        }
       }
     })
   }

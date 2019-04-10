@@ -7,40 +7,84 @@ import qs from 'qs'
 import Step0 from './steps/step0'
 import Step1 from './steps/step1'
 import './style.less'
+import Step2 from './steps/step2'
 
 const { Content } = Layout
 const { Step } = Steps
 
+// 该组件较复杂，step 所需参数一般依赖上一步
+// 编辑或查看，由 url 携带初始参数进入 step1
+// 其余的由该组件 state 管理
+// step0 具有一定的独立性
 export default class Lottery extends React.Component {
   state = {
-    step: 0
+    step: 0,
+    // 创建 step1 需要使用
+    wxSeetingId: 1,
+    // step2 之后需要使用，编辑由 url 带入初始化，新建则由 step1 之后设置
+    luckDrawId: 1,
+    details: {}
   }
 
   componentDidMount() {
-    // 检查 history.push 是否触发此函数
-    console.log(window.location.search)
+    // 前后 step 跳转通过 state 管理，history 只是为了初步判断编辑或创建
     const urlParamObj = getUrlParams()
-    const { step = 0 } = urlParamObj
-    this.setState({ step })
-    // 获取活动信息
-    const urlParam = qs.stringify({
-      'param.luckDrawId': urlParamObj['param.luckDrawId'],
-      'param.accountId': urlParamObj['param.accountId']
-    })
-    axios
-      .get(`/api/Active_LuckDraw/GetDrawDetailAsync?${urlParam}`)
-      .then(res => {
-        if (res) {
-          this.setState({ details: res })
-        }
+    const { step, luckDrawId, accountId } = urlParamObj
+    // url step 为 1 说明来自编辑或查看按钮，此时 Step1 的按钮走的是更新接口
+    if (step === '1') {
+      this.setState({ step: 1, luckDrawId })
+      // 尝试获取活动信息
+      const urlParam = qs.stringify({
+        'param.luckDrawId': luckDrawId,
+        'param.accountId': accountId
       })
+      axios
+        .get(`/api/Active_LuckDraw/GetDrawDetailAsync?${urlParam}`)
+        .then(res => {
+          if (res) {
+            this.setState({ details: res })
+          }
+        })
+    } else {
+      this.setState({ step: 0 })
+    }
   }
-
+  changeStep = step => {
+    this.setState({ step })
+  }
+  // 暂存 wxid 给 step1 使用
+  saveTempWxSeetingId = wxSeetingId => {
+    this.setState({ wxSeetingId })
+  }
+  // 暂存活动 id 给 step2 之后使用
+  saveLuckDrawId = luckDrawId => {
+    this.setState({ luckDrawId })
+  }
+  // TODO 计算未中奖概率
+  changeNoPercent = obj => {}
+  // TODO 奖品设置存储
+  changePrize = obj => {}
   getComponentMap = step => {
-    const { details } = this.state
+    const { details, wxSeetingId, luckDrawId } = this.state
     const map = {
-      '0': <Step0 />,
-      '1': <Step1 details={details} />
+      '0': <Step0 changeStep={this.changeStep} />,
+      '1': (
+        <Step1
+          details={details}
+          changeStep={this.changeStep}
+          saveLuckDrawId={this.saveLuckDrawId}
+          wxSeetingId={wxSeetingId}
+        />
+      ),
+      '2': (
+        <Step2
+          luckDrawId={luckDrawId}
+          details={details}
+          changeStep={this.changeStep}
+          changeNoPercent={this.changeNoPercent}
+          changePrize={this.changePrize}
+        />
+      )
     }
     return map[step]
   }

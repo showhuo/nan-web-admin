@@ -3,8 +3,13 @@ import React from 'react'
 import axios from '../../../utils/axios'
 import history from '../../../utils/history'
 import publicIcon from '../../../img/public-icon.png'
+import PropTypes from 'prop-types'
 
 export default class ChoosePublic extends React.Component {
+  static propTypes = {
+    changeStep: PropTypes.func.isRequired,
+    saveTempWxSeetingId: PropTypes.func.isRequired
+  }
   state = {
     publicList: [
       { WxPublicName: 'A', ActiveState: 'activated', WxImg: publicIcon },
@@ -27,9 +32,10 @@ export default class ChoosePublic extends React.Component {
         if (publicList) this.setState({ publicList })
       })
   }
-  clickPublic = WxSeetingId => {
-    // 点击跳转url，并带上参数 id
-    history.push(`/lottery-steps?step=1&wxSeetingId=${WxSeetingId}`)
+  clickPublic = wxSeetingId => {
+    // 切换 step 视图，暂存 id 给下一步使用
+    this.props.changeStep(1)
+    this.props.saveTempWxSeetingId(wxSeetingId)
   }
 
   componentDidMount() {

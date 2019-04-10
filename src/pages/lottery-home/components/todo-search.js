@@ -121,7 +121,7 @@ class UserSearch extends React.Component {
     })
   }
   createNewLottery = () => {
-    history.push('/lottery-choose-public')
+    history.push('/lottery-steps?step=0')
   }
 }
 

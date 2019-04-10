@@ -133,8 +133,8 @@ export default class TodoList extends React.Component {
     const urlParam = qs.stringify({
       // 跳到详情 step 1
       step: 1,
-      'param.luckDrawId': luckDrawId,
-      'param.accountId': accountId,
+      luckDrawId,
+      accountId,
       readonly: true
     })
     history.push(`/lottery-steps?${urlParam}`)
@@ -143,16 +143,16 @@ export default class TodoList extends React.Component {
     const urlParam = qs.stringify({
       // 跳到详情 step 1
       step: 1,
-      'param.luckDrawId': luckDrawId,
-      'param.accountId': accountId
+      luckDrawId,
+      accountId
     })
     history.push(`/lottery-steps?${urlParam}`)
   }
   // 查看中奖名单
   checkResult = luckDrawId => {
     const urlParam = qs.stringify({
-      'param.luckDrawId': luckDrawId,
-      'param.accountId': accountId
+      luckDrawId,
+      accountId
     })
     history.push(`/lottery-result?${urlParam}`)
   }

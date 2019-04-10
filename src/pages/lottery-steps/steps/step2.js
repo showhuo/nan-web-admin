@@ -13,13 +13,14 @@ import {
   Checkbox,
   Button,
   Row,
-  Col
+  Col,
+  Tabs
 } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
 import getUrlParam from '../../../utils/qs'
 import _ from 'lodash'
 
-const { RangePicker } = DatePicker
+const { TabPane } = Tabs
 
 const formItemLayout = {
   labelCol: {
@@ -32,9 +33,52 @@ const formItemLayout = {
 
 class Step2 extends React.Component {
   static propTypes = {
+    luckDrawId: PropTypes.number.isRequired,
     details: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
-    changeNoPercent: PropTypes.func.isRequired
+    changeStep: PropTypes.func.isRequired,
+    // 改变百分比
+    changeNoPercent: PropTypes.func.isRequired,
+    // 设置奖品
+    changePrize: PropTypes.func.isRequired
+  }
+
+  // 动态计算百分比
+  calculateNoPercent = () => {
+    this.props.form.validateFields(
+      ['firstPercent', 'secondPercent', 'thirdPercent'],
+      (errors, values) => {
+        if (!errors) {
+          console.log(values)
+          this.props.changeNoPercent(values)
+        }
+      }
+    )
+  }
+
+  // 奖品设置
+  // TODO TabPane切换时，需要保存当前 tab 的数据，存储到上一级
+  setPrize = obj => {
+    const { getFieldDecorator } = this.props.form
+    return (
+      <>
+        <Form.Item label="">
+          {getFieldDecorator('checkedCostIntegral', {
+            initialValue: true
+          })(<Checkbox>积分奖品</Checkbox>)}
+        </Form.Item>
+        <Form.Item label="积分数量">
+          {getFieldDecorator('prizeValue', {
+            initialValue: obj.PrizeValue
+          })(<InputNumber />)}
+        </Form.Item>
+        <Form.Item label="奖品总数">
+          {getFieldDecorator('prizeNumber', {
+            initialValue: obj.Number
+          })(<InputNumber />)}
+        </Form.Item>
+      </>
+    )
   }
 
   onSubmit = e => {
@@ -42,30 +86,18 @@ class Step2 extends React.Component {
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
         // 调整必要参数
-        const wxSeetingId = getUrlParam()['wxSeetingId']
         const accountId = localStorage.getItem('accountId')
-        values['startTime'] = values['range-time-picker'][0].format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
-        values['endTime'] = values['range-time-picker'][1].format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
-        values['wxSeetingId'] = wxSeetingId
         values['accountId'] = accountId
-        values['freeType'] = 1
-        // 删除无用参数
-        delete values['range-time-picker']
-        if (!values['checkedCostIntegral']) {
-          delete values['costIntegral']
-        }
+        values['luckDrawId'] = this.props.luckDrawId
+        values['prizeList'] = []
         const urlParam = assembleParams(values)
         console.log(urlParam)
-        // 提交数据，成功后会返回活动id，带上跳转下一步 step2
+
         axios
-          .post(`/api/Active_LuckDraw/AddDrawInfoAsync?${urlParam}`)
+          .post(`/api/Active_LuckDraw/SetDrawPrizeAsync?${urlParam}`)
           .then(res => {
             if (res) {
-              history.push(`/lottery-steps?step=2&luckDrawId=${res.LuckDrawId}`)
+              this.props.changeStep(3)
             }
           })
       }
@@ -80,11 +112,6 @@ class Step2 extends React.Component {
     const secondObj = _.find(Prize, { LevelName: '二等奖' }) || {}
     const thirdObj = _.find(Prize, { LevelName: '三等奖' }) || {}
     const fourthObj = _.find(Prize, { LevelName: '未中奖' }) || {}
-
-    const rangeConfig = {
-      initialValue: []
-      // rules: [{ type: 'array', required: true, message: 'Please select time!' }]
-    }
     return (
       <div className="step1">
         <p className="lottery-img-title">示意图</p>
@@ -97,15 +124,27 @@ class Step2 extends React.Component {
             <Col span={12}>
               <Form.Item label="一等奖">
                 {getFieldDecorator('firstPercent', {
-                  initialValue: firstObj.Percent
-                })(<Input required />)}
+                  initialValue: firstObj.Percent || 10
+                })(
+                  <InputNumber
+                    required
+                    min={0}
+                    onChange={this.calculateNoPercent}
+                  />
+                )}
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item label="二等奖">
                 {getFieldDecorator('secondPercent', {
-                  initialValue: secondObj.Percent
-                })(<Input required />)}
+                  initialValue: secondObj.Percent || 20
+                })(
+                  <InputNumber
+                    required
+                    min={0}
+                    onChange={this.calculateNoPercent}
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -113,12 +152,18 @@ class Step2 extends React.Component {
             <Col span={12}>
               <Form.Item label="三等奖">
                 {getFieldDecorator('thirdPercent', {
-                  initialValue: thirdObj.Percent
-                })(<Input required />)}
+                  initialValue: thirdObj.Percent || 30
+                })(
+                  <InputNumber
+                    required
+                    min={0}
+                    onChange={this.calculateNoPercent}
+                  />
+                )}
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="未中奖">{fourthObj.Percent}</Form.Item>
+              <Form.Item label="未中奖">{fourthObj.Percent || 40}%</Form.Item>
             </Col>
           </Row>
 
@@ -126,16 +171,17 @@ class Step2 extends React.Component {
             ------------------- 设置奖品 -------------------
           </p>
 
-          <Form.Item label="">
-            {getFieldDecorator('checkedCostIntegral', {
-              initialValue: true
-            })(<Checkbox>积分奖品</Checkbox>)}
-          </Form.Item>
-          <Form.Item label="积分数量">
-            {getFieldDecorator('prizeValue', {
-              initialValue: firstObj.PrizeValue
-            })(<InputNumber />)}
-          </Form.Item>
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="一等奖" key="1">
+              {this.setPrize(firstObj)}
+            </TabPane>
+            <TabPane tab="二等奖" key="2">
+              {this.setPrize(firstObj)}
+            </TabPane>
+            <TabPane tab="三等奖" key="3">
+              {this.setPrize(firstObj)}
+            </TabPane>
+          </Tabs>
 
           <Form.Item wrapperCol={{ offset: 6 }}>
             <Button htmlType="submit" type="primary">
