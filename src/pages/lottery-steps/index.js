@@ -4,10 +4,12 @@ import axios from '../../utils/axios'
 // import history from '../../utils/history'
 import getUrlParams from '../../utils/qs'
 import qs from 'qs'
-import Step0 from './steps/step0'
-import Step1 from './steps/step1'
+import Step0 from './steps/Step0'
+import Step1 from './steps/Step1'
+import Step2 from './steps/Step2'
+import Step3 from './steps/Step3'
 import './style.less'
-import Step2 from './steps/step2'
+import Step4 from './steps/Step4'
 
 const { Content } = Layout
 const { Step } = Steps
@@ -49,7 +51,7 @@ export default class Lottery extends React.Component {
         })
     } else {
       // TODO 调试用，正式需要设为 0
-      this.setState({ step: 2 })
+      this.setState({ step: 4 })
     }
   }
   changeStep = step => {
@@ -64,9 +66,9 @@ export default class Lottery extends React.Component {
     this.setState({ luckDrawId })
   }
   // TODO 计算未中奖概率
-  changeNoPercent = obj => {}
+  // changeNoPercent = obj => {}
   // TODO 奖品设置存储
-  changePrize = obj => {}
+  // changePrize = obj => {}
   getComponentMap = step => {
     const { details, wxSeetingId, luckDrawId } = this.state
     const map = {
@@ -89,8 +91,20 @@ export default class Lottery extends React.Component {
           luckDrawId={luckDrawId}
           details={details}
           changeStep={this.changeStep}
-          changeNoPercent={this.changeNoPercent}
-          changePrize={this.changePrize}
+        />
+      ),
+      '3': (
+        <Step3
+          luckDrawId={luckDrawId}
+          details={details}
+          changeStep={this.changeStep}
+        />
+      ),
+      '4': (
+        <Step4
+          luckDrawId={luckDrawId}
+          details={details}
+          changeStep={this.changeStep}
         />
       )
     }

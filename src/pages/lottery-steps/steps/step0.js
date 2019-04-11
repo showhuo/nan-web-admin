@@ -1,7 +1,6 @@
 // 选中公众号
 import React from 'react'
 import axios from '../../../utils/axios'
-import history from '../../../utils/history'
 import publicIcon from '../../../img/public-icon.png'
 import PropTypes from 'prop-types'
 

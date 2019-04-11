@@ -2,13 +2,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import axios from '../../../utils/axios'
-import history from '../../../utils/history'
 import imgurl from '../../../img/lottery-example.png'
 import {
   Form,
   Input,
-  DatePicker,
-  Radio,
   InputNumber,
   Checkbox,
   Button,
@@ -17,7 +14,6 @@ import {
   Tabs
 } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
-import getUrlParam from '../../../utils/qs'
 import _ from 'lodash'
 
 const { TabPane } = Tabs
@@ -36,11 +32,7 @@ class Step2 extends React.Component {
     luckDrawId: PropTypes.number.isRequired,
     details: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
-    changeStep: PropTypes.func.isRequired,
-    // 改变百分比
-    changeNoPercent: PropTypes.func.isRequired,
-    // 设置奖品
-    changePrize: PropTypes.func.isRequired
+    changeStep: PropTypes.func.isRequired
   }
   state = {
     // 未中奖概率由 state 接管
@@ -168,16 +160,14 @@ class Step2 extends React.Component {
     const thirdObj = _.find(Prize, { LevelName: '三等奖' }) || {}
     const fourthObj = _.find(Prize, { LevelName: '未中奖' }) || {}
     return (
-      <div className="step1">
+      <div className="step2">
         <p className="lottery-img-title">示意图</p>
         <img src={imgurl} alt="lottery" className="lottery-img" />
         <Form {...formItemLayout} onSubmit={this.onSubmit} className="the-form">
-          <p style={{ textAlign: 'center', fontSize: '1.6rem' }}>
-            ---------------------- 中奖概率 ----------------------
-          </p>
+          <TheLine text="中奖概率" />
           <Row>
             <Col span={12}>
-              <Form.Item label="一等奖" {...formItemLayout}>
+              <Form.Item label="一等奖" style={{ marginLeft: '5rem' }}>
                 {getFieldDecorator('firstPercent', {
                   initialValue: firstObj.Percent || 10
                 })(
@@ -211,7 +201,7 @@ class Step2 extends React.Component {
           </Row>
           <Row>
             <Col span={12}>
-              <Form.Item label="三等奖">
+              <Form.Item label="三等奖" style={{ marginLeft: '5rem' }}>
                 {getFieldDecorator('thirdPercent', {
                   initialValue: thirdObj.Percent || 30
                 })(
@@ -231,11 +221,9 @@ class Step2 extends React.Component {
             </Col>
           </Row>
 
-          <p style={{ textAlign: 'center', fontSize: '1.6rem' }}>
-            ------------------- 设置奖品 -------------------
-          </p>
+          <TheLine text="设置奖品" />
 
-          <Tabs defaultActiveKey="1" onChange={() => {}}>
+          <Tabs defaultActiveKey="1" style={{ marginLeft: '2rem' }}>
             <TabPane tab="一等奖" key="1">
               {this.setPrize(firstObj, 1)}
             </TabPane>
@@ -247,9 +235,7 @@ class Step2 extends React.Component {
             </TabPane>
           </Tabs>
 
-          <p style={{ textAlign: 'center', fontSize: '1.6rem' }}>
-            ------------------- 其他 -------------------
-          </p>
+          <TheLine text="其他" />
 
           <Form.Item label="未中奖鼓励">
             {getFieldDecorator('comment', {
@@ -269,3 +255,30 @@ class Step2 extends React.Component {
 }
 
 export default Form.create()(Step2)
+
+// 带横线的标题
+function TheLine({ text }) {
+  return (
+    <div style={{ textAlign: 'center', margin: '3rem auto', lineHeight: '1' }}>
+      <span
+        style={{
+          display: 'inline-block',
+          width: '20rem',
+          height: '0.1rem',
+          background: 'rgba(153,153,153,1)',
+          verticalAlign: 'super'
+        }}
+      />
+      <span style={{ margin: '3rem' }}>{text}</span>
+      <span
+        style={{
+          display: 'inline-block',
+          width: '20rem',
+          height: '0.1rem',
+          background: 'rgba(153,153,153,1)',
+          verticalAlign: 'super'
+        }}
+      />
+    </div>
+  )
+}

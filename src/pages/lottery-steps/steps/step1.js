@@ -2,7 +2,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import axios from '../../../utils/axios'
-import history from '../../../utils/history'
 import imgurl from '../../../img/lottery-example.png'
 import {
   Form,

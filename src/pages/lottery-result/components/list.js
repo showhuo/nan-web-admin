@@ -42,7 +42,7 @@ export default class List extends React.Component {
         title: '中奖时间'
       },
       {
-        dataIndex: 'AccountName',
+        dataIndex: 'AccountRealName',
         title: '姓名'
       },
       {
