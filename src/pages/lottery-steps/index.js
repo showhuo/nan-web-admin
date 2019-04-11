@@ -15,7 +15,9 @@ const { Step } = Steps
 // 该组件较复杂，step 所需参数一般依赖上一步
 // 编辑或查看，由 url 携带初始参数进入 step1
 // 其余的由该组件 state 管理
-// step0 具有一定的独立性
+// Step0 具有一定的独立性
+// Step1 区分编辑和创建接口，Step2 之后不区分
+// TODO 所有的上一步按钮，重新请求 detail 接口数据，成功再跳 step
 export default class Lottery extends React.Component {
   state = {
     step: 0,
@@ -46,13 +48,14 @@ export default class Lottery extends React.Component {
           }
         })
     } else {
-      this.setState({ step: 0 })
+      // TODO 调试用，正式需要设为 0
+      this.setState({ step: 2 })
     }
   }
   changeStep = step => {
     this.setState({ step })
   }
-  // 暂存 wxid 给 step1 使用
+  // step0 暂存 wxid
   saveTempWxSeetingId = wxSeetingId => {
     this.setState({ wxSeetingId })
   }
@@ -67,13 +70,18 @@ export default class Lottery extends React.Component {
   getComponentMap = step => {
     const { details, wxSeetingId, luckDrawId } = this.state
     const map = {
-      '0': <Step0 changeStep={this.changeStep} />,
+      '0': (
+        <Step0
+          changeStep={this.changeStep}
+          saveTempWxSeetingId={this.saveTempWxSeetingId}
+        />
+      ),
       '1': (
         <Step1
+          wxSeetingId={wxSeetingId}
           details={details}
           changeStep={this.changeStep}
           saveLuckDrawId={this.saveLuckDrawId}
-          wxSeetingId={wxSeetingId}
         />
       ),
       '2': (

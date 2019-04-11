@@ -35,7 +35,7 @@ export default class ChoosePublic extends React.Component {
   clickPublic = wxSeetingId => {
     // 切换 step 视图，暂存 id 给下一步使用
     this.props.changeStep(1)
-    this.props.saveTempWxSeetingId(wxSeetingId)
+    if (wxSeetingId) this.props.saveTempWxSeetingId(wxSeetingId)
   }
 
   componentDidMount() {

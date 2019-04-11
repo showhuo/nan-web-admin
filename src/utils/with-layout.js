@@ -46,12 +46,6 @@ export default function withLayout(WrappedComponent) {
             collapsible
             collapsed={this.state.collapsed}
             onCollapse={this.onCollapse}
-            style={{
-              overflow: 'auto',
-              height: '100vh',
-              position: 'fixed',
-              left: 0
-            }}
           >
             <div className="logo" />
             <Menu
@@ -86,11 +80,7 @@ export default function withLayout(WrappedComponent) {
               </SubMenu>
             </Menu>
           </Sider>
-          <Layout
-            style={
-              this.state.collapsed ? { marginLeft: 80 } : { marginLeft: 200 }
-            }
-          >
+          <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
               <Breadcrumb style={{ margin: '2rem 3rem' }}>
                 {this.getBreadcrumbs()}
@@ -102,7 +92,7 @@ export default function withLayout(WrappedComponent) {
             </Header>
             <WrappedComponent />
             <Footer style={{ textAlign: 'center' }}>
-              金钻客版权所有 ©2019
+              {/* 金钻客版权所有 ©2019 */}
             </Footer>
           </Layout>
         </Layout>
