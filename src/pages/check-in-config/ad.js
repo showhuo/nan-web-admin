@@ -57,11 +57,13 @@ export default class Ads extends React.Component {
       'param.id': Id,
       'param.activeName': ActiveName,
       'param.describe': Describe,
-      'param.activeImg': ActiveImg,
+      // 'param.activeImg': ActiveImg,
       'param.accountId': localStorage.getItem('accountId')
     })
     axios
-      .post(`/api/Active_SignIn/UpdatePageInfoAsync?${urlParam}`)
+      .post(`/api/Active_SignIn/UpdatePageInfoAsync?${urlParam}`, {
+        ActiveImg
+      })
       .then(res => {
         if (res) message.success('保存成功')
       })
