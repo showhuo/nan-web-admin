@@ -23,7 +23,7 @@ export default class SiderDemo extends React.Component {
     axios
       .get('/api/Active_SignIn/WxSignListAsync', {
         params: {
-          'param.plantFrom': accountId
+          'param.platFormAccountId': accountId
         }
       })
       .then(publicList => {

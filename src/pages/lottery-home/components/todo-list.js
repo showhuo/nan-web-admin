@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, message } from 'antd'
+import { Table, message, Button } from 'antd'
 import history from '../../../utils/history'
 import axios from '../../../utils/axios'
 import qs from 'qs'
@@ -10,7 +10,7 @@ const accountId = localStorage.getItem('accountId')
 
 export default class TodoList extends React.Component {
   static propTypes = {
-    list: PropTypes.object.isRequired,
+    list: PropTypes.array.isRequired,
     loading: PropTypes.bool.isRequired
   }
 
@@ -24,10 +24,10 @@ export default class TodoList extends React.Component {
     return (
       <>
         <div style={{ display: 'flex', marginBottom: 8 }}>
-          <h2 style={{ marginBottom: 0 }}>待处理列表</h2>
+          <h2 style={{ marginBottom: 0 }}>活动列表</h2>
         </div>
         <Table
-          rowKey="luckDrawId"
+          rowKey="Index"
           loading={loading}
           columns={this.columns}
           dataSource={listWithIdx}
@@ -39,40 +39,66 @@ export default class TodoList extends React.Component {
   get columns() {
     const columns = [
       {
-        dataIndex: 'idx',
+        dataIndex: 'Index',
         title: '序号'
       },
       {
         dataIndex: 'qrcode',
         title: '二维码/链接',
         render: (text, record) => {
-          // TODO 链接、二维码、复制按钮
           const { LinkUrl, QrcodeUrl } = record
           return (
             <div>
-              {LinkUrl}
-              <img src={QrcodeUrl} alt="qrcode" />
-              <span
-                onClick={copyTextToClipboard(LinkUrl)}
-                style={{ color: 'rgba(66, 136, 255, 1)' }}
+              <div
+                style={{
+                  width: '14rem',
+                  display: 'inline-block',
+                  verticalAlign: 'middle'
+                }}
               >
-                复制链接
-              </span>
+                <div
+                  style={{
+                    width: '14rem',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {LinkUrl}
+                </div>
+                <span
+                  onClick={() => {
+                    copyTextToClipboard(LinkUrl)
+                  }}
+                  style={{ color: 'rgba(66, 136, 255, 1)', cursor: 'pointer' }}
+                >
+                  复制链接
+                </span>
+              </div>
+              <img
+                src={QrcodeUrl}
+                alt="qrcode"
+                style={{
+                  display: 'inline-block',
+                  width: '4rem',
+                  height: '4rem'
+                }}
+              />
             </div>
           )
         }
       },
-      { dataIndex: 'Id', title: '活动编号' },
+      { dataIndex: 'WxSeetingName', title: '公众号' },
       {
         dataIndex: 'ActiveName',
-        title: '名称'
+        title: '活动名称'
       },
       {
-        dataIndex: 'ActiveState',
+        dataIndex: 'ActiveStateText',
         title: '活动状态'
       },
       {
-        dataIndex: 'BeginTime',
+        dataIndex: 'StartTime',
         title: '开始时间'
       },
       {
@@ -80,9 +106,71 @@ export default class TodoList extends React.Component {
         title: '结束时间'
       },
       {
+        dataIndex: 'LuckDrawIdText',
+        title: '活动编号'
+      },
+      {
         title: '操作',
         render: (text, record) => {
           // TODO 多种按钮
+          const { LuckDrawId } = record
+          return (
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => {
+                  this.release(LuckDrawId)
+                }}
+              >
+                发布
+              </Button>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => {
+                  this.edit(LuckDrawId)
+                }}
+              >
+                编辑
+              </Button>
+              <Button
+                size="small"
+                type="primary"
+                onClick={() => {
+                  this.checkLuckDraw(LuckDrawId)
+                }}
+              >
+                查看
+              </Button>
+              <Button
+                size="small"
+                type="danger"
+                onClick={() => {
+                  this.delete(LuckDrawId)
+                }}
+              >
+                删除
+              </Button>
+              <Button
+                size="small"
+                type="danger"
+                onClick={() => {
+                  this.offline(LuckDrawId)
+                }}
+              >
+                下线
+              </Button>
+              <Button
+                size="small"
+                onClick={() => {
+                  this.checkResult(LuckDrawId)
+                }}
+              >
+                获奖名单
+              </Button>
+            </div>
+          )
         }
       }
     ]

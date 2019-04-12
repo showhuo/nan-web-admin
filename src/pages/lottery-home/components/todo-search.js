@@ -5,10 +5,10 @@ import history from '../../../utils/history'
 
 const { RangePicker } = DatePicker
 const drawActiveStateArr = [
-  { label: '未发布', value: 0 },
-  { label: '未开始', value: 1 },
-  { label: '进行中', value: 2 },
-  { label: '已结束', value: 3 }
+  { label: '已结束', value: 1 },
+  { label: '未发布', value: 2 },
+  { label: '未开始', value: 3 },
+  { label: '进行中', value: 4 }
 ]
 
 class UserSearch extends React.Component {

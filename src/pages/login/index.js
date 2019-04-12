@@ -24,7 +24,7 @@ class NormalLoginForm extends React.Component {
             if (res) {
               // 将用户 accountId 存储供后续使用
               localStorage.setItem('accountId', res.PlatFormAccountId)
-              history.push('/check-in')
+              history.push('/check-in-home')
             }
           })
       }
@@ -65,9 +65,7 @@ class NormalLoginForm extends React.Component {
   }
 }
 
-const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(
-  NormalLoginForm
-)
+const WrappedNormalLoginForm = Form.create()(NormalLoginForm)
 
 export default class Login extends React.Component {
   render() {
@@ -81,7 +79,7 @@ export default class Login extends React.Component {
         <div className="body">
           <div className="ads" />
           <div className="content">
-            <div className="scan">扫码登录</div>
+            <div className="scan">账号登录</div>
             <WrappedNormalLoginForm />
           </div>
         </div>

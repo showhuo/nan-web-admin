@@ -1,3 +1,5 @@
+import { message } from 'antd'
+
 function fallbackCopyTextToClipboard(text) {
   var textArea = document.createElement('textarea')
   textArea.value = text
@@ -9,6 +11,7 @@ function fallbackCopyTextToClipboard(text) {
     var successful = document.execCommand('copy')
     var msg = successful ? 'successful' : 'unsuccessful'
     console.log('Fallback: Copying text command was ' + msg)
+    message.success('复制成功')
   } catch (err) {
     console.error('Fallback: Oops, unable to copy', err)
   }
@@ -23,6 +26,7 @@ export default function copyTextToClipboard(text) {
   navigator.clipboard.writeText(text).then(
     function() {
       console.log('Async: Copying to clipboard was successful!')
+      message.success('复制成功')
     },
     function(err) {
       console.error('Async: Could not copy text: ', err)

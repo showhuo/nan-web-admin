@@ -4,7 +4,7 @@ import { baseURL } from '../config'
 const ins = axios.create({
   baseURL,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+    'Content-Type': 'application/json;charset=utf-8'
   }
 })
 

@@ -65,7 +65,7 @@ export default function withLayout(WrappedComponent) {
                   </span>
                 }
               >
-                <Menu.Item key="/lottery">幸运大抽奖</Menu.Item>
+                <Menu.Item key="/lottery-home">幸运大抽奖</Menu.Item>
               </SubMenu>
               <SubMenu
                 key="sub2"
@@ -76,7 +76,7 @@ export default function withLayout(WrappedComponent) {
                   </span>
                 }
               >
-                <Menu.Item key="/check-in">日历签到</Menu.Item>
+                <Menu.Item key="/check-in-home">日历签到</Menu.Item>
               </SubMenu>
             </Menu>
           </Sider>
