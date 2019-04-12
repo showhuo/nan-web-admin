@@ -28,7 +28,7 @@ class Result extends React.Component {
     }
     const urlParam = qs.stringify(obj)
     axios
-      .post(`/api/Active_LuckDraw/GetDrawWinnerListAsync?${urlParam}`)
+      .get(`/api/Active_LuckDraw/GetDrawWinnerListAsync?${urlParam}`)
       .then(res => {
         if (res) {
           this.setState({ list: res.data, loading: false })

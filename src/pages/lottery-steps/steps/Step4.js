@@ -6,6 +6,7 @@ import imgurl from '../../../img/lottery-example.png'
 import { Form, Input, Button, message } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
 import copyTextToClipboard from '../../../utils/copy-to-clipboard'
+import history from '../../../utils/history'
 
 const formItemLayout = {
   labelCol: {
@@ -39,12 +40,13 @@ class Step4 extends React.Component {
         }
       })
   }
-  // TODO 保存
-  save = () => {}
+  // step3 接口已自动保存，此按钮只是为了返回首页
+  save = () => {
+    history.push('/lottery-home')
+  }
 
   render() {
-    const { details = {}, form } = this.props
-    // const { getFieldDecorator } = form
+    const { details = {} } = this.props
     const { LinkUrl, QrcodeUrl } = details
     return (
       <div className="step4">

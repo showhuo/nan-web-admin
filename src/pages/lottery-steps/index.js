@@ -19,7 +19,7 @@ const { Step } = Steps
 // 其余的由该组件 state 管理
 // Step0 具有一定的独立性
 // Step1 区分编辑和创建接口，Step2 之后不区分
-// TODO 所有的上一步按钮，重新请求 detail 接口数据，成功再跳 step
+// 所有的上一步按钮，重新请求 detail 接口数据，成功再跳 step
 export default class Lottery extends React.Component {
   state = {
     step: 0,
@@ -65,10 +65,32 @@ export default class Lottery extends React.Component {
   saveLuckDrawId = luckDrawId => {
     this.setState({ luckDrawId })
   }
-  // TODO 计算未中奖概率
-  // changeNoPercent = obj => {}
-  // TODO 奖品设置存储
-  // changePrize = obj => {}
+  // step3 提交后更新活动地址和二维码
+  updateDetailUrls = ({ LinkUrl, QrcodeUrl }) => {
+    const details = Object.assign({}, this.state.details)
+    if (LinkUrl) details.LinkUrl = LinkUrl
+    if (QrcodeUrl) details.QrcodeUrl = QrcodeUrl
+    this.setState({ details })
+  }
+  // 上一步按钮，重新请求 detail
+  refetchDetails = () => {
+    return new Promise((resolve, reject) => {
+      const accountId = localStorage.getItem('accountId')
+      const urlParam = qs.stringify({
+        'param.luckDrawId': this.state.luckDrawId,
+        'param.accountId': accountId
+      })
+      axios
+        .get(`/api/Active_LuckDraw/GetDrawDetailAsync?${urlParam}`)
+        .then(res => {
+          if (res) {
+            this.setState({ details: res })
+            resolve()
+          }
+        })
+    })
+  }
+  // 根据 step 渲染不同组件
   getComponentMap = step => {
     const { details, wxSeetingId, luckDrawId } = this.state
     const map = {
@@ -91,6 +113,7 @@ export default class Lottery extends React.Component {
           luckDrawId={luckDrawId}
           details={details}
           changeStep={this.changeStep}
+          refetchDetails={this.refetchDetails}
         />
       ),
       '3': (
@@ -98,6 +121,8 @@ export default class Lottery extends React.Component {
           luckDrawId={luckDrawId}
           details={details}
           changeStep={this.changeStep}
+          updateDetailUrls={this.updateDetailUrls}
+          refetchDetails={this.refetchDetails}
         />
       ),
       '4': (

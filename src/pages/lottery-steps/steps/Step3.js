@@ -20,9 +20,18 @@ class Step3 extends React.Component {
     luckDrawId: PropTypes.number.isRequired,
     details: PropTypes.object.isRequired,
     changeStep: PropTypes.func.isRequired,
+    updateDetailUrls: PropTypes.func.isRequired,
+    refetchDetails: PropTypes.func.isRequired,
     form: PropTypes.object.isRequired
   }
 
+  // 上一步
+  goBack = () => {
+    this.props.refetchDetails().then(() => {
+      this.props.changeStep(2)
+    })
+  }
+  // 下一步
   onSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((errors, values) => {
@@ -38,6 +47,8 @@ class Step3 extends React.Component {
           .post(`/api/Active_LuckDraw/SetDrawRoleAsync?${urlParam}`)
           .then(res => {
             if (res) {
+              // 此接口会返回链接地址和二维码图片，下一步使用
+              this.props.updateDetailUrls(res)
               this.props.changeStep(4)
             }
           })
@@ -61,6 +72,9 @@ class Step3 extends React.Component {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 6 }}>
+            <Button onClick={this.goBack} style={{ marginRight: '2rem' }}>
+              上一步
+            </Button>
             <Button htmlType="submit" type="primary">
               下一步
             </Button>

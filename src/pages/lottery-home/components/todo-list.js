@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, message, Button } from 'antd'
+import { Table, message, Button, Modal } from 'antd'
 import history from '../../../utils/history'
 import axios from '../../../utils/axios'
 import qs from 'qs'
@@ -113,27 +113,36 @@ export default class TodoList extends React.Component {
         title: '操作',
         render: (text, record) => {
           // TODO 多种按钮
-          const { LuckDrawId } = record
+          const { LuckDrawId, ActiveStateText } = record
           return (
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => {
-                  this.release(LuckDrawId)
-                }}
-              >
-                发布
-              </Button>
-              <Button
-                size="small"
-                type="primary"
-                onClick={() => {
-                  this.edit(LuckDrawId)
-                }}
-              >
-                编辑
-              </Button>
+              {ActiveStateText === '未发布' && (
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={() => {
+                    Modal.confirm({
+                      title: '确定要发布吗？',
+                      onOk: () => {
+                        this.release(LuckDrawId)
+                      }
+                    })
+                  }}
+                >
+                  发布
+                </Button>
+              )}
+              {ActiveStateText === '未发布' && (
+                <Button
+                  size="small"
+                  type="primary"
+                  onClick={() => {
+                    this.edit(LuckDrawId)
+                  }}
+                >
+                  编辑
+                </Button>
+              )}
               <Button
                 size="small"
                 type="primary"
@@ -147,20 +156,33 @@ export default class TodoList extends React.Component {
                 size="small"
                 type="danger"
                 onClick={() => {
-                  this.delete(LuckDrawId)
+                  Modal.confirm({
+                    title: '确定要删除吗？',
+                    onOk: () => {
+                      this.delete(LuckDrawId)
+                    }
+                  })
                 }}
               >
                 删除
               </Button>
-              <Button
-                size="small"
-                type="danger"
-                onClick={() => {
-                  this.offline(LuckDrawId)
-                }}
-              >
-                下线
-              </Button>
+              {(ActiveStateText === '未开始' ||
+                ActiveStateText === '进行中') && (
+                <Button
+                  size="small"
+                  type="danger"
+                  onClick={() => {
+                    Modal.confirm({
+                      title: '确定要下线吗？',
+                      onOk: () => {
+                        this.offline(LuckDrawId)
+                      }
+                    })
+                  }}
+                >
+                  下线
+                </Button>
+              )}
               <Button
                 size="small"
                 onClick={() => {

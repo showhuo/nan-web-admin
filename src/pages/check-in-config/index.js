@@ -84,7 +84,7 @@ export default class CheckInConfig extends React.Component {
       'param.accountId': accountId
     })
     axios
-      .post(`/api/Active_SignIn/UpdateActiveStateAsync/${Id}?${urlParam}`)
+      .post(`/api/Active_SignIn/UpdateActiveStateAsync?${urlParam}`)
       .then(res => {
         if (res) {
           message.success('开关切换成功')
@@ -406,11 +406,9 @@ export default class CheckInConfig extends React.Component {
     const accountId = localStorage.getItem('accountId')
     params['param.accountId'] = accountId
     const urlParam = qs.stringify(params)
-    axios
-      .post(`/api/Active_SignIn/SetAsync/${this.state.Id}?${urlParam}`)
-      .then(res => {
-        if (res) message.success('保存成功')
-      })
+    axios.post(`/api/Active_SignIn/SetAsync?${urlParam}`).then(res => {
+      if (res) message.success('保存成功')
+    })
   }
 
   // 重置弹框数据

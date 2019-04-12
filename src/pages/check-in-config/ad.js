@@ -61,7 +61,7 @@ export default class Ads extends React.Component {
       'param.accountId': localStorage.getItem('accountId')
     })
     axios
-      .post(`/api/Active_SignIn/UpdatePageInfoAsync/${Id}?${urlParam}`)
+      .post(`/api/Active_SignIn/UpdatePageInfoAsync?${urlParam}`)
       .then(res => {
         if (res) message.success('保存成功')
       })

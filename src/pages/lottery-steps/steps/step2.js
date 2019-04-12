@@ -32,7 +32,8 @@ class Step2 extends React.Component {
     luckDrawId: PropTypes.number.isRequired,
     details: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
-    changeStep: PropTypes.func.isRequired
+    changeStep: PropTypes.func.isRequired,
+    refetchDetails: PropTypes.func.isRequired
   }
   state = {
     // 未中奖概率由 state 接管
@@ -89,6 +90,13 @@ class Step2 extends React.Component {
     )
   }
 
+  // 上一步
+  goBack = () => {
+    this.props.refetchDetails().then(() => {
+      this.props.changeStep(1)
+    })
+  }
+  // 下一步
   onSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((errors, values) => {
