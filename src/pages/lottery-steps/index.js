@@ -51,7 +51,7 @@ export default class Lottery extends React.Component {
         })
     } else {
       // TODO 调试用，正式需要设为 0
-      this.setState({ step: 4 })
+      this.setState({ step: 0 })
     }
   }
   changeStep = step => {
