@@ -68,13 +68,14 @@ export default class CheckInConfig extends React.Component {
         params: { 'param.wxSeetingId': WxSeetingId }
       })
       .then(result => {
+        // 将 result 替换当前 state
         if (result) this.setState(result)
       })
   }
 
   ActiveState = () => {
     // 开关行为直接上报
-    const { Id, ActiveState } = this.state
+    const { Id = 0, ActiveState } = this.state
     // 取出用户标识 accountId
     const accountId = localStorage.getItem('accountId')
     const urlParam = qs.stringify({
@@ -392,9 +393,7 @@ export default class CheckInConfig extends React.Component {
   submitBasic = () => {
     // 将 state key 首字母小写，为了构造 post body : params
     const copyState = Object.assign({}, this.state)
-    const params = {
-      'param.id': null
-    }
+    const params = {}
     for (const key in copyState) {
       if (copyState.hasOwnProperty(key)) {
         const value = copyState[key]
@@ -402,9 +401,12 @@ export default class CheckInConfig extends React.Component {
         params[`param.${lowerKey}`] = value
       }
     }
+    if (!params['param.id']) params['param.id'] = 0
     // 取出用户标识 accountId
     const accountId = localStorage.getItem('accountId')
     params['param.accountId'] = accountId
+    const WxSeetingId = getUrlParam().WxSeetingId || ''
+    params['param.wxSeetingId'] = WxSeetingId
     const urlParam = qs.stringify(params)
     axios.post(`/api/Active_SignIn/SetAsync?${urlParam}`).then(res => {
       if (res) message.success('保存成功')

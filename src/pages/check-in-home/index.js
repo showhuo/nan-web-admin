@@ -3,18 +3,13 @@ import { Layout } from 'antd'
 import axios from '../../utils/axios'
 import history from '../../utils/history'
 import './style.less'
-import publicIcon from '../../img/public-icon.png'
+// import publicIcon from '../../img/public-icon.png'
 
 const { Content } = Layout
 
 export default class SiderDemo extends React.Component {
   state = {
-    publicList: [
-      { WxPublicName: 'A', ActiveState: 'activated', WxImg: publicIcon },
-      { WxPublicName: 'B', ActiveState: 'activated1', WxImg: publicIcon },
-      { WxPublicName: 'C', ActiveState: 'activated', WxImg: publicIcon },
-      { WxPublicName: 'D', ActiveState: 'activated1', WxImg: publicIcon }
-    ]
+    publicList: []
   }
 
   getPublics = uid => {
