@@ -11,7 +11,8 @@ const accountId = localStorage.getItem('accountId')
 export default class TodoList extends React.Component {
   static propTypes = {
     list: PropTypes.array.isRequired,
-    loading: PropTypes.bool.isRequired
+    loading: PropTypes.bool.isRequired,
+    query: PropTypes.func.isRequired
   }
 
   render() {
@@ -64,26 +65,33 @@ export default class TodoList extends React.Component {
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  {LinkUrl}
+                  {LinkUrl ? LinkUrl : '活动创建未完成'}
                 </div>
-                <span
-                  onClick={() => {
-                    copyTextToClipboard(LinkUrl)
-                  }}
-                  style={{ color: 'rgba(66, 136, 255, 1)', cursor: 'pointer' }}
-                >
-                  复制链接
-                </span>
+                {LinkUrl && (
+                  <span
+                    onClick={() => {
+                      copyTextToClipboard(LinkUrl)
+                    }}
+                    style={{
+                      color: 'rgba(66, 136, 255, 1)',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    复制链接
+                  </span>
+                )}
               </div>
-              <img
-                src={QrcodeUrl}
-                alt="qrcode"
-                style={{
-                  display: 'inline-block',
-                  width: '4rem',
-                  height: '4rem'
-                }}
-              />
+              {QrcodeUrl && (
+                <img
+                  src={QrcodeUrl}
+                  alt="qrcode"
+                  style={{
+                    display: 'inline-block',
+                    width: '4rem',
+                    height: '4rem'
+                  }}
+                />
+              )}
             </div>
           )
         }
@@ -209,6 +217,7 @@ export default class TodoList extends React.Component {
       .then(res => {
         if (res) {
           message.success('发布成功')
+          this.props.query()
         }
       })
   }
@@ -222,6 +231,7 @@ export default class TodoList extends React.Component {
       .then(res => {
         if (res) {
           message.success('下线成功')
+          this.props.query()
         }
       })
   }
@@ -235,6 +245,7 @@ export default class TodoList extends React.Component {
       .then(res => {
         if (res) {
           message.success('删除成功')
+          this.props.query()
         }
       })
   }

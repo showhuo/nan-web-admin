@@ -14,6 +14,7 @@ import {
 } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
 import getUrlParam from '../../../utils/qs'
+import moment from 'moment'
 
 const { RangePicker } = DatePicker
 
@@ -37,6 +38,12 @@ class Step1 extends React.Component {
 
   onSubmit = e => {
     e.preventDefault()
+    // 查看只跳转，不请求
+    const readonly = !!getUrlParam().readonly
+    if (readonly) {
+      this.props.changeStep(2)
+      return
+    }
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
         // 调整必要参数
@@ -51,10 +58,10 @@ class Step1 extends React.Component {
 
         values['accountId'] = accountId
         values['freeType'] = 1
-        // 删除无用参数
+        // 未勾选则传0
         delete values['range-time-picker']
         if (!values['checkedCostIntegral']) {
-          delete values['costIntegral']
+          values['costIntegral'] = 0
         }
         // 此处需要根据 url 参数 step === 1 区分是更新接口，否则为新建
         const isUpdate = getUrlParam().step === '1'
@@ -89,9 +96,16 @@ class Step1 extends React.Component {
   render() {
     const { details = {}, form } = this.props
     const { getFieldDecorator } = form
-    const { ActiveName, Comment, FreeType, CostIntegral } = details
+    const {
+      ActiveName,
+      Comment,
+      FreeType,
+      CostIntegral,
+      StartTime,
+      EndTime
+    } = details
     const rangeConfig = {
-      initialValue: []
+      initialValue: [moment(StartTime), moment(EndTime)]
       // rules: [{ type: 'array', required: true, message: 'Please select time!' }]
     }
     return (
@@ -143,14 +157,14 @@ class Step1 extends React.Component {
           <Form.Item label="消耗积分">
             {getFieldDecorator('costIntegral', {
               initialValue: CostIntegral
-            })(<InputNumber />)}
+            })(<InputNumber min={1} />)}
           </Form.Item>
           <Form.Item label="温馨提示" className="the-tips">
             <span>未勾选，那么用户将无法使用积分购买抽奖机会；</span>
+            <br />
             <span>
               已勾选，那么用户将消耗输入框内数量的积分购买一次新的抽奖机会；
             </span>
-            <span>填写为零则代表客户将可以无限抽奖（请慎重）</span>
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 6 }}>
             <Button htmlType="submit" type="primary">

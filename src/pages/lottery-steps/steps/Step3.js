@@ -5,6 +5,7 @@ import axios from '../../../utils/axios'
 import imgurl from '../../../img/lottery-example.png'
 import { Form, Input, Button } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
+import getUrlParam from '../../../utils/qs'
 
 const formItemLayout = {
   labelCol: {
@@ -34,6 +35,12 @@ class Step3 extends React.Component {
   // 下一步
   onSubmit = e => {
     e.preventDefault()
+    // 查看只跳转，不请求
+    const readonly = !!getUrlParam().readonly
+    if (readonly) {
+      this.props.changeStep(4)
+      return
+    }
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
         // 调整必要参数

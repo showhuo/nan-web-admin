@@ -55,7 +55,7 @@ class TodoPage extends React.Component {
         <Search loading={loading} query={query} publicArr={publicArr} />
 
         {/* 列表 */}
-        <List list={list} loading={loading} />
+        <List list={list} loading={loading} query={query} />
       </Content>
     )
   }

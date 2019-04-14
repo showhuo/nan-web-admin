@@ -124,7 +124,9 @@ export default class CheckInConfig extends React.Component {
       modalVisible,
       modalContiDays,
       modalContiReward,
-      modalDayReward
+      modalDayReward,
+      IsLoopModel,
+      CycleDay
     } = this.state
     const isDayRewardModal = modalType === 'setDayReward'
 
@@ -153,9 +155,15 @@ export default class CheckInConfig extends React.Component {
           <span className="sub-title">循环模式：</span>
           <div className="unit-right">
             <div className="loop-header">
-              <Checkbox onChange={this.clickLoopCheckBox}>开启</Checkbox>
+              <Checkbox checked={IsLoopModel} onChange={this.clickLoopCheckBox}>
+                开启
+              </Checkbox>
               <span>固定周期</span>
-              <InputNumber onChange={this.setLoopCycle} size="small" />
+              <InputNumber
+                value={CycleDay}
+                onChange={this.setLoopCycle}
+                size="small"
+              />
               <span style={{ margin: '0 1rem' }}>天</span>
               <span className="tip1">
                 单个周期内，每个累计/连续签到奖励只可被领取一次
@@ -402,6 +410,14 @@ export default class CheckInConfig extends React.Component {
       }
     }
     if (!params['param.id']) params['param.id'] = 0
+    // 特殊参数，格式化和 json 化
+    params['param.continuousRewardList'] = JSON.stringify(
+      this.state.ContinuousRewardList.map(e => {
+        e.RewardType = 1
+        delete e.Id
+        return e
+      })
+    )
     // 取出用户标识 accountId
     const accountId = localStorage.getItem('accountId')
     params['param.accountId'] = accountId
@@ -424,7 +440,14 @@ export default class CheckInConfig extends React.Component {
   }
 
   render() {
-    const { ActiveState, ActiveName, Describe, ActiveImg, Id } = this.state
+    const {
+      ActiveState,
+      ActiveName,
+      Describe,
+      ActiveImg,
+      ActiveImgDefault,
+      Id
+    } = this.state
     return (
       <Content
         className="check-in-config"
@@ -444,7 +467,9 @@ export default class CheckInConfig extends React.Component {
             {this.basicConfig()}
           </TabPane>
           <TabPane tab="签到页配置" key="2">
-            <Ads data={{ ActiveImg, ActiveName, Describe, Id }} />
+            <Ads
+              data={{ ActiveImg, ActiveImgDefault, ActiveName, Describe, Id }}
+            />
           </TabPane>
         </Tabs>
       </Content>

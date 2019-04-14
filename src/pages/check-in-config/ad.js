@@ -27,9 +27,14 @@ export default class Ads extends React.Component {
     ActiveImg: headImgExample
   }
   componentDidMount() {
-    const { Id, ActiveName, Describe, ActiveImg = headImgExample } =
-      this.props.data || {}
-    this.setState({ Id, ActiveName, Describe, ActiveImg })
+    const {
+      Id,
+      ActiveName,
+      Describe,
+      ActiveImg = headImgExample,
+      ActiveImgDefault
+    } = this.props.data || {}
+    this.setState({ Id, ActiveName, Describe, ActiveImg, ActiveImgDefault })
   }
 
   beforeUpload = file => {
@@ -67,6 +72,10 @@ export default class Ads extends React.Component {
       .then(res => {
         if (res) message.success('保存成功')
       })
+  }
+  // 重置图片
+  reset = () => {
+    this.setState({ ActiveImg: this.state.ActiveImgDefault })
   }
   render() {
     const { ActiveName, Describe, ActiveImg } = this.state

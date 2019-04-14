@@ -1,7 +1,7 @@
 // 选中公众号
 import React from 'react'
 import axios from '../../../utils/axios'
-import publicIcon from '../../../img/public-icon.png'
+
 import PropTypes from 'prop-types'
 
 export default class ChoosePublic extends React.Component {
@@ -10,15 +10,10 @@ export default class ChoosePublic extends React.Component {
     saveTempWxSeetingId: PropTypes.func.isRequired
   }
   state = {
-    publicList: [
-      { WxPublicName: 'A', ActiveState: 'activated', WxImg: publicIcon },
-      { WxPublicName: 'B', ActiveState: 'activated1', WxImg: publicIcon },
-      { WxPublicName: 'C', ActiveState: 'activated', WxImg: publicIcon },
-      { WxPublicName: 'D', ActiveState: 'activated1', WxImg: publicIcon }
-    ]
+    publicList: []
   }
 
-  getPublics = uid => {
+  getPublics = () => {
     //  获取公众号列表，带上用户标识参数
     const accountId = localStorage.getItem('accountId')
     axios
@@ -38,8 +33,7 @@ export default class ChoosePublic extends React.Component {
   }
 
   componentDidMount() {
-    const uid = localStorage.getItem('uid')
-    this.getPublics(uid)
+    this.getPublics()
   }
 
   render() {

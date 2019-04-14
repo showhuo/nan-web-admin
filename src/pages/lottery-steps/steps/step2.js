@@ -15,6 +15,7 @@ import {
 } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
 import _ from 'lodash'
+import getUrlParam from '../../../utils/qs'
 
 const { TabPane } = Tabs
 
@@ -99,6 +100,12 @@ class Step2 extends React.Component {
   // 下一步
   onSubmit = e => {
     e.preventDefault()
+    // 查看只跳转，不请求
+    const readonly = !!getUrlParam().readonly
+    if (readonly) {
+      this.props.changeStep(3)
+      return
+    }
     this.props.form.validateFields((errors, values) => {
       if (!errors) {
         const newObj = {}
@@ -142,7 +149,7 @@ class Step2 extends React.Component {
           PrizeValue: prizeValue3,
           Number: prizeNumber3
         }
-        newObj.prizeList = [firstObj, secondObj, thirdObj]
+        newObj.prizeList = JSON.stringify([firstObj, secondObj, thirdObj])
         newObj.comment = comment
         console.log(newObj)
 
