@@ -83,7 +83,7 @@ export default function withLayout(WrappedComponent) {
           </Sider>
           <Layout>
             <Header style={{ background: '#fff', padding: 0 }}>
-              <Breadcrumb style={{ margin: '2/10rem 3/10rem' }}>
+              <Breadcrumb style={{ margin: '.2rem .3rem' }}>
                 {this.getBreadcrumbs()}
               </Breadcrumb>
               <div className="logout" onClick={this.logout}>

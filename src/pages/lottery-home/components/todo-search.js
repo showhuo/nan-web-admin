@@ -2,6 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Row, Col, Button, DatePicker, Select, Input } from 'antd'
 import history from '../../../utils/history'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
 
 const { RangePicker } = DatePicker
 const drawActiveStateArr = [
@@ -87,7 +90,7 @@ class UserSearch extends React.Component {
                 type="default"
                 icon="reload"
                 onClick={() => form.resetFields()}
-                style={{ marginLeft: '2/10rem' }}
+                style={{ marginLeft: '.2rem' }}
               >
                 重置
               </Button>

@@ -143,7 +143,7 @@ export default class Lottery extends React.Component {
     return (
       <Content
         className="lottery"
-        style={{ margin: '2/10rem', padding: '2/10rem', background: '#fff' }}
+        style={{ margin: '.2rem', padding: '.2rem', background: '#fff' }}
       >
         <Steps size="small" current={Number(step)}>
           <Step title="选择公众号" />

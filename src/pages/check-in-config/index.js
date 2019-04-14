@@ -84,16 +84,21 @@ export default class CheckInConfig extends React.Component {
       'param.activeState': !ActiveState,
       'param.accountId': accountId
     })
-    axios
-      .post(`/api/Active_SignIn/UpdateActiveStateAsync?${urlParam}`)
-      .then(res => {
-        if (res) {
-          message.success('开关切换成功')
-          this.setState({
-            ActiveState: !this.state.ActiveState
+    Modal.confirm({
+      content: `确定要${ActiveState ? '关闭' : '开启'}吗？`,
+      onOk: () => {
+        axios
+          .post(`/api/Active_SignIn/UpdateActiveStateAsync?${urlParam}`)
+          .then(res => {
+            if (res) {
+              message.success('开关切换成功')
+              this.setState({
+                ActiveState: !this.state.ActiveState
+              })
+            }
           })
-        }
-      })
+      }
+    })
   }
 
   clickLoopCheckBox = () => {
@@ -160,11 +165,12 @@ export default class CheckInConfig extends React.Component {
               </Checkbox>
               <span>固定周期</span>
               <InputNumber
+                min={1}
                 value={CycleDay}
                 onChange={this.setLoopCycle}
                 size="small"
               />
-              <span style={{ margin: '0 1/10rem' }}>天</span>
+              <span style={{ margin: '0 .1rem' }}>天</span>
               <span className="tip1">
                 单个周期内，每个累计/连续签到奖励只可被领取一次
               </span>
@@ -178,10 +184,10 @@ export default class CheckInConfig extends React.Component {
                 <Radio value={2}>今日24:00立即生效</Radio>
               </RadioGroup>
             </div>
-            <p className="tip1">
+            {/* <p className="tip1">
               *温馨提示：开启、关闭活更改固定周期，该设置将在次日0:00生效*
-            </p>
-            <p style={{ marginTop: '1.6/10rem' }}>
+            </p> */}
+            <p style={{ marginTop: '.16rem' }}>
               当前周期：{nowCycle}， 下一周期：{nextCycle}
             </p>
           </div>
@@ -198,7 +204,7 @@ export default class CheckInConfig extends React.Component {
               columns={this.getColumns()}
               dataSource={ContinuousRewardList}
               pagination={false}
-              style={{ margin: '1/10rem 0' }}
+              style={{ margin: '.1rem 0' }}
             />
             <p
               className="clickable"
@@ -221,7 +227,10 @@ export default class CheckInConfig extends React.Component {
         <div className="unit">
           <span className="sub-title">入口设置：</span>
           <div className="unit-right">
-            <Checkbox onChange={this.toggleIsVipPagePopUp}>
+            <Checkbox
+              checked={this.state.IsVipPagePopUp}
+              onChange={this.toggleIsVipPagePopUp}
+            >
               未签到用户每日第1次访问会员中心时自动弹出签到弹窗
             </Checkbox>
             <p className="tip1">
@@ -451,7 +460,7 @@ export default class CheckInConfig extends React.Component {
     return (
       <Content
         className="check-in-config"
-        style={{ margin: '2/10rem', background: '#fff', padding: 0 }}
+        style={{ margin: '.2rem', background: '#fff', padding: 0 }}
       >
         <div className="header">
           <span className="title">日历签到</span>
