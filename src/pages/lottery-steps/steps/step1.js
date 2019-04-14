@@ -10,7 +10,8 @@ import {
   Radio,
   InputNumber,
   Checkbox,
-  Button
+  Button,
+  Divider
 } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
 import getUrlParam from '../../../utils/qs'
@@ -105,21 +106,21 @@ class Step1 extends React.Component {
       EndTime
     } = details
     const rangeConfig = {
-      initialValue: [moment(StartTime), moment(EndTime)]
-      // rules: [{ type: 'array', required: true, message: 'Please select time!' }]
+      initialValue: [moment(StartTime), moment(EndTime)],
+      rules: [{ type: 'array', required: true, message: '活动时间不能为空' }]
+    }
+    const activeNameConfig = {
+      initialValue: ActiveName,
+      rules: [{ required: true, message: '活动名称不能为空' }]
     }
     return (
       <div className="step1">
         <p className="lottery-img-title">示意图</p>
         <img src={imgurl} alt="lottery" className="lottery-img" />
         <Form {...formItemLayout} onSubmit={this.onSubmit} className="the-form">
-          <p style={{ textAlign: 'center', fontSize: '1.6rem' }}>
-            ---------------------- 活动概要 ----------------------
-          </p>
+          <Divider>活动概要</Divider>
           <Form.Item label="活动名称">
-            {getFieldDecorator('activeName', {
-              initialValue: ActiveName
-            })(<Input required />)}
+            {getFieldDecorator('activeName', activeNameConfig)(<Input />)}
           </Form.Item>
           <Form.Item label="活动时间">
             {getFieldDecorator('range-time-picker', rangeConfig)(
@@ -128,7 +129,7 @@ class Step1 extends React.Component {
           </Form.Item>
           <Form.Item label="活动说明">
             {getFieldDecorator('comment', {
-              initialValue: Comment
+              initialValue: Comment || '幸运转转转，大奖天天见'
             })(<Input.TextArea />)}
           </Form.Item>
           <p
@@ -137,9 +138,7 @@ class Step1 extends React.Component {
           >
             用户通过微信分享给朋友时，会自动显示页面描述
           </p>
-          <p style={{ textAlign: 'center', fontSize: '1.6rem' }}>
-            ------------------- 用户参与设置 -------------------
-          </p>
+          <Divider>用户参与设置</Divider>
           <Form.Item label="免费参与次数">
             {getFieldDecorator('freeType', {
               initialValue: FreeType

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Table, message, Button, Modal } from 'antd'
+import { Table, message, Button, Modal, Popover } from 'antd'
 import history from '../../../utils/history'
 import axios from '../../../utils/axios'
 import qs from 'qs'
@@ -48,6 +48,17 @@ export default class TodoList extends React.Component {
         title: '二维码/链接',
         render: (text, record) => {
           const { LinkUrl, QrcodeUrl } = record
+          const hoverImg = (
+            <img
+              src={QrcodeUrl}
+              alt="qrcode"
+              style={{
+                display: 'inline-block',
+                width: '8rem',
+                height: '8rem'
+              }}
+            />
+          )
           return (
             <div>
               <div
@@ -82,15 +93,17 @@ export default class TodoList extends React.Component {
                 )}
               </div>
               {QrcodeUrl && (
-                <img
-                  src={QrcodeUrl}
-                  alt="qrcode"
-                  style={{
-                    display: 'inline-block',
-                    width: '4rem',
-                    height: '4rem'
-                  }}
-                />
+                <Popover content={hoverImg}>
+                  <img
+                    src={QrcodeUrl}
+                    alt="qrcode"
+                    style={{
+                      display: 'inline-block',
+                      width: '4rem',
+                      height: '4rem'
+                    }}
+                  />
+                </Popover>
               )}
             </div>
           )

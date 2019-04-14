@@ -21,7 +21,8 @@ export default function withLayout(WrappedComponent) {
     }
 
     logout = uid => {
-      // TODO 退出登录
+      // 退出登录
+      history.push('/login')
     }
 
     getBreadcrumbs = () => {
@@ -92,7 +93,7 @@ export default function withLayout(WrappedComponent) {
             </Header>
             <WrappedComponent />
             <Footer style={{ textAlign: 'center' }}>
-              金钻客版权所有 ©2019
+              {/* 金钻客版权所有 ©2019 */}
             </Footer>
           </Layout>
         </Layout>

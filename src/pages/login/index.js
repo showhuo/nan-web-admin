@@ -37,7 +37,7 @@ class NormalLoginForm extends React.Component {
       <Form onSubmit={this.handleSubmit} className="login-form">
         <Form.Item label="账号">
           {getFieldDecorator('account', {
-            rules: [{ required: true, message: 'Please input your username!' }]
+            rules: [{ required: true, message: '请输入账号' }]
           })(
             <Input
               prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -47,7 +47,7 @@ class NormalLoginForm extends React.Component {
         </Form.Item>
         <Form.Item label="密码">
           {getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Please input your Password!' }]
+            rules: [{ required: true, message: '请输入密码' }]
           })(
             <Input
               prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -58,7 +58,7 @@ class NormalLoginForm extends React.Component {
         </Form.Item>
 
         <Button type="primary" htmlType="submit" className="login-form-button">
-          Log in
+          登录
         </Button>
       </Form>
     )
@@ -72,8 +72,7 @@ export default class Login extends React.Component {
     return (
       <div className="login">
         <div className="header">
-          <div className="logo" />
-          <span className="title">金钻客商家运营平台</span>
+          <span className="title">商家运营平台</span>
           <span className="sub-title">管理平台</span>
         </div>
         <div className="body">

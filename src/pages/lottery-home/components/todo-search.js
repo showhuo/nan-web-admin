@@ -5,6 +5,7 @@ import history from '../../../utils/history'
 
 const { RangePicker } = DatePicker
 const drawActiveStateArr = [
+  { label: '全部', value: '' },
   { label: '已结束', value: 1 },
   { label: '未发布', value: 2 },
   { label: '未开始', value: 3 },
@@ -20,7 +21,8 @@ class UserSearch extends React.Component {
   }
 
   render() {
-    const { form, loading, publicArr = [] } = this.props
+    const { form, loading } = this.props
+    let { publicArr = [] } = this.props
     const { getFieldDecorator } = form
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -37,7 +39,7 @@ class UserSearch extends React.Component {
           </Col>
           <Col span={8}>
             <Form.Item label="状态">
-              {getFieldDecorator('param.drawActiveState', { initialValue: '' })(
+              {getFieldDecorator('drawActiveState', { initialValue: '' })(
                 <Select>
                   {drawActiveStateArr.map((item, index) => (
                     <Select.Option key={index} value={item.value}>
@@ -50,13 +52,15 @@ class UserSearch extends React.Component {
           </Col>
           <Col span={8}>
             <Form.Item label="公众号">
-              {getFieldDecorator('param.wxSeetingId', { initialValue: '' })(
+              {getFieldDecorator('wxSeetingId', { initialValue: '' })(
                 <Select>
-                  {publicArr.map((item, index) => (
-                    <Select.Option key={index} value={item.WxSeetingId}>
-                      {item.WxPublicName}
-                    </Select.Option>
-                  ))}
+                  {publicArr
+                    .concat({ WxPublicName: '全部', WxSeetingId: '' })
+                    .map((item, index) => (
+                      <Select.Option key={index} value={item.WxSeetingId}>
+                        {item.WxPublicName}
+                      </Select.Option>
+                    ))}
                 </Select>
               )}
             </Form.Item>
@@ -66,7 +70,7 @@ class UserSearch extends React.Component {
         <Row gutter={8} className="actions">
           <Col span={8}>
             <Form.Item label="关键词">
-              {getFieldDecorator('param.keyWord')(<Input />)}
+              {getFieldDecorator('keyWord')(<Input />)}
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -111,12 +115,18 @@ class UserSearch extends React.Component {
         // 对日期区间进行格式化，适配接口要求
         const timeArr = params['time']
         if (timeArr) {
-          params['param.beginTime'] = timeArr[0]
-          params['param.endTime'] = timeArr[1]
+          params['beginTime'] = timeArr[0].format('YYYY-MM-DD')
+          params['endTime'] = timeArr[1].format('YYYY-MM-DD')
           delete params['time']
         }
-
-        query(params)
+        // 格式化 params
+        const newObj = {}
+        for (const key in params) {
+          if (params.hasOwnProperty(key)) {
+            newObj['param.' + key] = params[key]
+          }
+        }
+        query(newObj)
       }
     })
   }
