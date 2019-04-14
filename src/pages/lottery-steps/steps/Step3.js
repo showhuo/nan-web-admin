@@ -72,14 +72,16 @@ class Step3 extends React.Component {
         <p className="lottery-img-title">示意图</p>
         <img src={imgurl} alt="lottery" className="lottery-img" />
         <Form {...formItemLayout} onSubmit={this.onSubmit} className="the-form">
-          <Form.Item label="活动规则说明" style={{ marginTop: '2rem' }}>
+          <Form.Item label="活动规则说明" style={{ marginTop: '0.2rem' }}>
             {getFieldDecorator('roleComment', {
               initialValue: RoleComment || ``
-            })(<Input.TextArea style={{ width: '42rem', height: '28rem' }} />)}
+            })(
+              <Input.TextArea style={{ width: '4.2rem', height: '2.8rem' }} />
+            )}
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 6 }}>
-            <Button onClick={this.goBack} style={{ marginRight: '2rem' }}>
+            <Button onClick={this.goBack} style={{ marginRight: '0.2rem' }}>
               上一步
             </Button>
             <Button htmlType="submit" type="primary">

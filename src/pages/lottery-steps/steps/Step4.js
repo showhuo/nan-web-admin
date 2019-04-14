@@ -53,7 +53,7 @@ class Step4 extends React.Component {
         <p className="lottery-img-title">示意图</p>
         <img src={imgurl} alt="lottery" className="lottery-img" />
         <Form {...formItemLayout} className="the-form">
-          <Form.Item label="链接地址" style={{ marginTop: '2rem' }}>
+          <Form.Item label="链接地址" style={{ marginTop: '.2rem' }}>
             <Input value={LinkUrl} style={{ width: '80%' }} />
             <Button
               type="primary"
@@ -66,21 +66,21 @@ class Step4 extends React.Component {
           </Form.Item>
           <span
             className="the-tips"
-            style={{ position: 'absolute', left: '15rem', top: '6rem' }}
+            style={{ position: 'absolute', left: '1.7rem', top: '.7rem' }}
           >
             直接复制该链接给您的粉丝
           </span>
           <Form.Item label="二维码">
             <img
               src={QrcodeUrl}
-              style={{ width: '16rem', height: '16rem' }}
+              style={{ width: '1.6rem', height: '1.6rem' }}
               alt="qrcode"
             />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 6 }}>
             <span
               className="the-tips"
-              style={{ display: 'inline-block', width: '23rem' }}
+              style={{ display: 'inline-block', width: '2.3rem' }}
             >
               您也可以微信扫一扫打开链接，然后 分享给您的粉丝目前仅通过点击被人
               分享的链接进入，请尽快分享出
@@ -94,7 +94,7 @@ class Step4 extends React.Component {
             <Button onClick={this.onSubmit} type="primary">
               发布
             </Button>
-            <Button onClick={this.save} style={{ marginLeft: '2rem' }}>
+            <Button onClick={this.save} style={{ marginLeft: '.2rem' }}>
               保存
             </Button>
           </Form.Item>

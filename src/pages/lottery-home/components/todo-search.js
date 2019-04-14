@@ -87,7 +87,7 @@ class UserSearch extends React.Component {
                 type="default"
                 icon="reload"
                 onClick={() => form.resetFields()}
-                style={{ marginLeft: '2rem' }}
+                style={{ marginLeft: '2/10rem' }}
               >
                 重置
               </Button>

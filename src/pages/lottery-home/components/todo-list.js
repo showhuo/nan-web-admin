@@ -54,8 +54,8 @@ export default class TodoList extends React.Component {
               alt="qrcode"
               style={{
                 display: 'inline-block',
-                width: '8rem',
-                height: '8rem'
+                width: '8/10rem',
+                height: '8/10rem'
               }}
             />
           )
@@ -63,14 +63,14 @@ export default class TodoList extends React.Component {
             <div>
               <div
                 style={{
-                  width: '14rem',
+                  width: '14/10rem',
                   display: 'inline-block',
                   verticalAlign: 'middle'
                 }}
               >
                 <div
                   style={{
-                    width: '14rem',
+                    width: '14/10rem',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap'
@@ -99,8 +99,8 @@ export default class TodoList extends React.Component {
                     alt="qrcode"
                     style={{
                       display: 'inline-block',
-                      width: '4rem',
-                      height: '4rem'
+                      width: '4/10rem',
+                      height: '4/10rem'
                     }}
                   />
                 </Popover>

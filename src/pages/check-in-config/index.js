@@ -164,7 +164,7 @@ export default class CheckInConfig extends React.Component {
                 onChange={this.setLoopCycle}
                 size="small"
               />
-              <span style={{ margin: '0 1rem' }}>天</span>
+              <span style={{ margin: '0 1/10rem' }}>天</span>
               <span className="tip1">
                 单个周期内，每个累计/连续签到奖励只可被领取一次
               </span>
@@ -181,7 +181,7 @@ export default class CheckInConfig extends React.Component {
             <p className="tip1">
               *温馨提示：开启、关闭活更改固定周期，该设置将在次日0:00生效*
             </p>
-            <p style={{ marginTop: '1.6rem' }}>
+            <p style={{ marginTop: '1.6/10rem' }}>
               当前周期：{nowCycle}， 下一周期：{nextCycle}
             </p>
           </div>
@@ -198,7 +198,7 @@ export default class CheckInConfig extends React.Component {
               columns={this.getColumns()}
               dataSource={ContinuousRewardList}
               pagination={false}
-              style={{ margin: '1rem 0' }}
+              style={{ margin: '1/10rem 0' }}
             />
             <p
               className="clickable"
@@ -451,7 +451,7 @@ export default class CheckInConfig extends React.Component {
     return (
       <Content
         className="check-in-config"
-        style={{ margin: '2rem', background: '#fff', padding: 0 }}
+        style={{ margin: '2/10rem', background: '#fff', padding: 0 }}
       >
         <div className="header">
           <span className="title">日历签到</span>

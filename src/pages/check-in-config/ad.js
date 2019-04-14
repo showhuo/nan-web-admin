@@ -112,7 +112,7 @@ export default class Ads extends React.Component {
                   重置
                 </Button>
                 <Upload showUploadList={false} beforeUpload={this.beforeUpload}>
-                  <Button type="primary" style={{ margin: '0 1rem' }}>
+                  <Button type="primary" style={{ margin: '0 1/10rem' }}>
                     <Icon type="upload" /> 替换
                   </Button>
                 </Upload>

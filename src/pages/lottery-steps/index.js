@@ -52,7 +52,7 @@ export default class Lottery extends React.Component {
         })
     } else {
       // 调试用，正式需要设为 0
-      this.setState({ step: 0 })
+      this.setState({ step: 4 })
     }
   }
   changeStep = step => {
@@ -143,7 +143,7 @@ export default class Lottery extends React.Component {
     return (
       <Content
         className="lottery"
-        style={{ margin: '2rem', padding: '2rem', background: '#fff' }}
+        style={{ margin: '2/10rem', padding: '2/10rem', background: '#fff' }}
       >
         <Steps size="small" current={Number(step)}>
           <Step title="选择公众号" />

@@ -16,7 +16,7 @@ export default class List extends React.Component {
     })
 
     return (
-      <div style={{ margin: '2rem' }}>
+      <div style={{ margin: '2/10rem' }}>
         <div style={{ display: 'flex', marginBottom: 8 }}>
           <h2 style={{ marginBottom: 0 }}>中奖名单</h2>
         </div>

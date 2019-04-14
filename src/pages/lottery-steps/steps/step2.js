@@ -182,7 +182,7 @@ class Step2 extends React.Component {
           <TheLine text="中奖概率" />
           <Row>
             <Col span={12}>
-              <Form.Item label="一等奖" style={{ marginLeft: '5rem' }}>
+              <Form.Item label="一等奖" style={{ marginLeft: '0.5rem' }}>
                 {getFieldDecorator('firstPercent', {
                   initialValue: firstObj.Percent || 10
                 })(
@@ -216,7 +216,7 @@ class Step2 extends React.Component {
           </Row>
           <Row>
             <Col span={12}>
-              <Form.Item label="三等奖" style={{ marginLeft: '5rem' }}>
+              <Form.Item label="三等奖" style={{ marginLeft: '0.5rem' }}>
                 {getFieldDecorator('thirdPercent', {
                   initialValue: thirdObj.Percent || 30
                 })(
@@ -238,7 +238,7 @@ class Step2 extends React.Component {
 
           <TheLine text="设置奖品" />
 
-          <Tabs defaultActiveKey="1" style={{ marginLeft: '2rem' }}>
+          <Tabs defaultActiveKey="1" style={{ marginLeft: '0.2rem' }}>
             <TabPane tab="一等奖" key="1">
               {this.setPrize(firstObj, 1)}
             </TabPane>
@@ -255,7 +255,7 @@ class Step2 extends React.Component {
           <Form.Item label="未中奖鼓励">
             {getFieldDecorator('comment', {
               initialValue: fourthObj.Comment || ''
-            })(<Input.TextArea style={{ width: '40rem', height: '7rem' }} />)}
+            })(<Input.TextArea style={{ width: '4rem', height: '0.7rem' }} />)}
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 5 }}>
@@ -274,22 +274,24 @@ export default Form.create()(Step2)
 // 带横线的标题
 function TheLine({ text }) {
   return (
-    <div style={{ textAlign: 'center', margin: '3rem auto', lineHeight: '1' }}>
+    <div
+      style={{ textAlign: 'center', margin: '0.3rem auto', lineHeight: '1' }}
+    >
       <span
         style={{
           display: 'inline-block',
-          width: '20rem',
-          height: '0.1rem',
+          width: '2rem',
+          height: '0.01rem',
           background: 'rgba(153,153,153,1)',
           verticalAlign: 'super'
         }}
       />
-      <span style={{ margin: '3rem' }}>{text}</span>
+      <span style={{ margin: '0.3rem' }}>{text}</span>
       <span
         style={{
           display: 'inline-block',
-          width: '20rem',
-          height: '0.1rem',
+          width: '2rem',
+          height: '0.01rem',
           background: 'rgba(153,153,153,1)',
           verticalAlign: 'super'
         }}

@@ -57,7 +57,7 @@ export default class SiderDemo extends React.Component {
     return (
       <Content
         className="check-in"
-        style={{ margin: '2rem', background: '#fff', padding: 0 }}
+        style={{ margin: '2/10rem', background: '#fff', padding: 0 }}
       >
         <div className="tips">请选择要设置签到日历的公众号</div>
         <div className="publicList">{publicList}</div>

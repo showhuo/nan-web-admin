@@ -130,11 +130,17 @@ class Step1 extends React.Component {
           <Form.Item label="活动说明">
             {getFieldDecorator('comment', {
               initialValue: Comment || '幸运转转转，大奖天天见'
-            })(<Input.TextArea />)}
+            })(
+              <Input.TextArea style={{ width: '4.2rem', height: '0.72rem' }} />
+            )}
           </Form.Item>
           <p
             className="the-tips"
-            style={{ display: 'inline-block', margin: '-4rem 3rem 3rem 15rem' }}
+            style={{
+              position: 'relative',
+              top: '-0.3rem',
+              left: '1.8rem'
+            }}
           >
             用户通过微信分享给朋友时，会自动显示页面描述
           </p>
