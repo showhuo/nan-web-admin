@@ -132,7 +132,7 @@ export default class TodoList extends React.Component {
       },
       {
         title: '操作',
-        width: '20%',
+        width: '22%',
         render: (text, record) => {
           // 多种按钮
           const { LuckDrawId, ActiveStateText } = record

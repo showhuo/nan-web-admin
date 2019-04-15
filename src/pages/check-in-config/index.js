@@ -363,6 +363,12 @@ export default class CheckInConfig extends React.Component {
       const isNewRow = modalType === 'newContinue'
       if (isNewRow) {
         const newTableData = ContinuousRewardList.concat()
+        // 去重
+        const isDuplicated = !!_.find(newTableData, { Day: modalContiDays })
+        if (isDuplicated) {
+          message.error('不允许设置相同天数')
+          return
+        }
         newTableData.push({
           Id: uuid(),
           Day: modalContiDays,
@@ -374,6 +380,13 @@ export default class CheckInConfig extends React.Component {
         const index = _.findIndex(ContinuousRewardList, { Id: modalContiRowId })
         if (index !== -1) {
           const newTableData = ContinuousRewardList.concat()
+          // TODO 去重，与新增不一样
+          const isDuplicated =
+            _.findLastIndex(newTableData, { Day: modalContiDays }) === index
+          if (isDuplicated) {
+            message.error('不允许设置相同天数')
+            return
+          }
           newTableData.splice(index, 1, {
             Id: modalContiRowId,
             Day: modalContiDays,
