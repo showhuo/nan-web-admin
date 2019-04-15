@@ -8,10 +8,10 @@ import qs from 'qs'
 
 const formItemLayout = {
   labelCol: {
-    span: 4
+    span: 5
   },
   wrapperCol: {
-    span: 14
+    span: 16
   }
 }
 const headImgExample =

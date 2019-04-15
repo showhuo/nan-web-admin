@@ -3,7 +3,7 @@ import { Layout, Menu, Breadcrumb, Icon } from 'antd'
 import history from '../utils/history'
 import './with-layout.less'
 
-const { Header, Footer, Sider } = Layout
+const { Header, Sider } = Layout
 const SubMenu = Menu.SubMenu
 export default function withLayout(WrappedComponent) {
   return class extends React.Component {
@@ -94,10 +94,6 @@ export default function withLayout(WrappedComponent) {
             <div className="main-content">
               <WrappedComponent />
             </div>
-
-            {/* <Footer style={{ textAlign: 'center' }}> */}
-            {/* 金钻客版权所有 ©2019 */}
-            {/* </Footer> */}
           </Layout>
         </Layout>
       )
