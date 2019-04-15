@@ -50,7 +50,7 @@ class TodoPage extends React.Component {
     const { query } = this
     const { list, publicArr, loading } = this.state
     return (
-      <Content style={{ margin: '.2rem' }}>
+      <Content style={{ margin: '.2rem' }} className="lottery-home">
         {/* 查询条件 */}
         <Search loading={loading} query={query} publicArr={publicArr} />
 

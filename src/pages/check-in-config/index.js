@@ -102,10 +102,12 @@ export default class CheckInConfig extends React.Component {
   }
 
   clickLoopCheckBox = () => {
+    // TODO 循环模式开启计算并预览周期
     this.setState({ IsLoopModel: !this.state.IsLoopModel })
   }
 
   setLoopCycle = CycleDay => {
+    // TODO 计算并预览周期
     this.setState({ CycleDay })
   }
 
@@ -113,6 +115,7 @@ export default class CheckInConfig extends React.Component {
     this.setState({ Note: e.target.value })
   }
   changeLoopRadio = e => {
+    // TODO 计算并预览周期
     this.setState({ TakeEffectType: e.target.value })
   }
 

@@ -132,11 +132,39 @@ export default class TodoList extends React.Component {
       },
       {
         title: '操作',
+        width: '20%',
         render: (text, record) => {
-          // TODO 多种按钮
+          // 多种按钮
           const { LuckDrawId, ActiveStateText } = record
+          const moreBtn = (
+            <>
+              <Button
+                size="small"
+                type="danger"
+                onClick={() => {
+                  Modal.confirm({
+                    title: '确定要删除吗？',
+                    onOk: () => {
+                      this.delete(LuckDrawId)
+                    }
+                  })
+                }}
+                style={{ marginRight: '0.1rem' }}
+              >
+                删除
+              </Button>
+              <Button
+                size="small"
+                onClick={() => {
+                  this.checkResult(LuckDrawId)
+                }}
+              >
+                获奖名单
+              </Button>
+            </>
+          )
           return (
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <div className="config-btns">
               {ActiveStateText === '未发布' && (
                 <Button
                   size="small"
@@ -173,20 +201,7 @@ export default class TodoList extends React.Component {
               >
                 查看
               </Button>
-              <Button
-                size="small"
-                type="danger"
-                onClick={() => {
-                  Modal.confirm({
-                    title: '确定要删除吗？',
-                    onOk: () => {
-                      this.delete(LuckDrawId)
-                    }
-                  })
-                }}
-              >
-                删除
-              </Button>
+
               {(ActiveStateText === '未开始' ||
                 ActiveStateText === '进行中') && (
                 <Button
@@ -204,14 +219,11 @@ export default class TodoList extends React.Component {
                   下线
                 </Button>
               )}
-              <Button
-                size="small"
-                onClick={() => {
-                  this.checkResult(LuckDrawId)
-                }}
-              >
-                获奖名单
-              </Button>
+              <Popover content={moreBtn} trigger="click">
+                <Button size="small" type="primary">
+                  更多
+                </Button>
+              </Popover>
             </div>
           )
         }

@@ -37,7 +37,6 @@ export default class Lottery extends React.Component {
     // url step 为 1 说明来自编辑或查看按钮，此时 Step1 的按钮走的是更新接口
     // 如果是查看，url 参数会有 readonly，所有下一步按钮不响应，由各 step 组件自行从 url 判断
     if (step === '1') {
-      this.setState({ step: 1, luckDrawId: Number(luckDrawId) })
       // 尝试获取活动信息
       const urlParam = qs.stringify({
         'param.luckDrawId': luckDrawId,
@@ -47,12 +46,19 @@ export default class Lottery extends React.Component {
         .get(`/api/Active_LuckDraw/GetDrawDetailAsync?${urlParam}`)
         .then(res => {
           if (res) {
-            this.setState({ details: res })
+            // 临时方案，是否勾选step1的消耗积分
+            const checkedCostIntegral = !!res.CostIntegral
+            this.setState({
+              step: 1,
+              luckDrawId: Number(luckDrawId),
+              details: res,
+              checkedCostIntegral
+            })
           }
         })
     } else {
-      // 调试用，正式需要设为 0
-      this.setState({ step: 4 })
+      //  调试用，正式需要设为 0
+      this.setState({ step: 0 })
     }
   }
   changeStep = step => {
@@ -85,15 +91,20 @@ export default class Lottery extends React.Component {
         .get(`/api/Active_LuckDraw/GetDrawDetailAsync?${urlParam}`)
         .then(res => {
           if (res) {
-            this.setState({ details: res })
+            const checkedCostIntegral = !!res.CostIntegral
+            this.setState({ checkedCostIntegral, details: res })
             resolve()
           }
         })
     })
   }
+  // 勾选消耗积分step1
+  toggleCheckedCostIntegral = () => {
+    this.setState({ checkedCostIntegral: !this.state.checkedCostIntegral })
+  }
   // 根据 step 渲染不同组件
   getComponentMap = step => {
-    const { details, wxSeetingId, luckDrawId } = this.state
+    const { details, wxSeetingId, luckDrawId, checkedCostIntegral } = this.state
     const map = {
       '0': (
         <Step0
@@ -107,6 +118,8 @@ export default class Lottery extends React.Component {
           details={details}
           changeStep={this.changeStep}
           saveLuckDrawId={this.saveLuckDrawId}
+          checkedCostIntegral={checkedCostIntegral}
+          toggleCheckedCostIntegral={this.toggleCheckedCostIntegral}
         />
       ),
       '2': (

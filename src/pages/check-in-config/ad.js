@@ -38,11 +38,11 @@ export default class Ads extends React.Component {
   }
 
   beforeUpload = file => {
-    // const isJPG = file.type === 'image/jpeg'
-    // if (!isJPG) {
-    //   message.error('只能上传 JPG 文件')
-    //   return false
-    // }
+    const isImage = file.type === 'image/jpeg' || file.type === 'image/png'
+    if (!isImage) {
+      message.error('只能上传 JPG 或 PNG 文件')
+      return false
+    }
     const isLt2M = file.size / 1024 / 1024 < 2
     if (!isLt2M) {
       message.error('文件大小不要超过 2MB')

@@ -238,7 +238,7 @@ class Step2 extends React.Component {
 
           <TheLine text="设置奖品" />
 
-          <Tabs defaultActiveKey="1" style={{ marginLeft: '0.2rem' }}>
+          <Tabs defaultActiveKey="1" className="tabs" type="card">
             <TabPane tab="一等奖" key="1">
               {this.setPrize(firstObj, 1)}
             </TabPane>
@@ -254,11 +254,19 @@ class Step2 extends React.Component {
 
           <Form.Item label="未中奖鼓励">
             {getFieldDecorator('comment', {
-              initialValue: fourthObj.Comment || ''
-            })(<Input.TextArea style={{ width: '4rem', height: '0.7rem' }} />)}
+              initialValue: fourthObj.Comment || '哎呀！真可惜擦身而过！'
+            })(
+              <Input.TextArea
+                className="no-prize-txt"
+                style={{ width: '4rem', height: '0.7rem' }}
+              />
+            )}
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 5 }}>
+            <Button onClick={this.goBack} style={{ marginRight: '0.2rem' }}>
+              上一步
+            </Button>
             <Button htmlType="submit" type="primary">
               下一步
             </Button>
@@ -299,3 +307,4 @@ function TheLine({ text }) {
     </div>
   )
 }
+export { TheLine }

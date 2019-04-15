@@ -91,10 +91,13 @@ export default function withLayout(WrappedComponent) {
                 <span className="logout-text">退出登录</span>
               </div>
             </Header>
-            <WrappedComponent />
-            <Footer style={{ textAlign: 'center' }}>
-              {/* 金钻客版权所有 ©2019 */}
-            </Footer>
+            <div className="main-content">
+              <WrappedComponent />
+            </div>
+
+            {/* <Footer style={{ textAlign: 'center' }}> */}
+            {/* 金钻客版权所有 ©2019 */}
+            {/* </Footer> */}
           </Layout>
         </Layout>
       )

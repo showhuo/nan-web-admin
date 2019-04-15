@@ -15,6 +15,18 @@ const formItemLayout = {
     span: 15
   }
 }
+const defaultComment = `1、每人每天开局有1次免费的抽奖机会
+2、转盘分为10份，分别对应
+1、一等奖，奖品：积分500
+2、二等奖，奖品：积分300
+3、三等奖，奖品：积分200
+3、用户可以花积分购买抽奖机会，200积分一次，次数无
+限
+4、抽奖结果以当次抽奖结束后显示的窗口内容为准
+温馨提示：如果页面为及时显示您的免费机会，请尝试退
+出活动页面在重新进来哦。
+本活动解释权归浙江金涛珠宝首饰有限公司所有
+`
 
 class Step3 extends React.Component {
   static propTypes = {
@@ -74,7 +86,7 @@ class Step3 extends React.Component {
         <Form {...formItemLayout} onSubmit={this.onSubmit} className="the-form">
           <Form.Item label="活动规则说明" style={{ marginTop: '0.2rem' }}>
             {getFieldDecorator('roleComment', {
-              initialValue: RoleComment || ``
+              initialValue: RoleComment || defaultComment
             })(
               <Input.TextArea style={{ width: '4.2rem', height: '2.8rem' }} />
             )}

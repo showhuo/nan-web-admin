@@ -10,12 +10,12 @@ import {
   Radio,
   InputNumber,
   Checkbox,
-  Button,
-  Divider
+  Button
 } from 'antd'
 import assembleParams from '../../../utils/assemble-params'
 import getUrlParam from '../../../utils/qs'
 import moment from 'moment'
+import { TheLine } from './Step2'
 
 const { RangePicker } = DatePicker
 
@@ -34,7 +34,9 @@ class Step1 extends React.Component {
     details: PropTypes.object.isRequired,
     changeStep: PropTypes.func.isRequired,
     saveLuckDrawId: PropTypes.func.isRequired,
-    form: PropTypes.object.isRequired
+    form: PropTypes.object.isRequired,
+    checkedCostIntegral: PropTypes.bool.isRequired,
+    toggleCheckedCostIntegral: PropTypes.func.isRequired
   }
 
   onSubmit = e => {
@@ -95,7 +97,12 @@ class Step1 extends React.Component {
   }
 
   render() {
-    const { details = {}, form } = this.props
+    const {
+      details = {},
+      form,
+      checkedCostIntegral,
+      toggleCheckedCostIntegral
+    } = this.props
     const { getFieldDecorator } = form
     const {
       ActiveName,
@@ -118,7 +125,7 @@ class Step1 extends React.Component {
         <p className="lottery-img-title">示意图</p>
         <img src={imgurl} alt="lottery" className="lottery-img" />
         <Form {...formItemLayout} onSubmit={this.onSubmit} className="the-form">
-          <Divider>活动概要</Divider>
+          <TheLine text="活动概要" />
           <Form.Item label="活动名称">
             {getFieldDecorator('activeName', activeNameConfig)(<Input />)}
           </Form.Item>
@@ -144,7 +151,7 @@ class Step1 extends React.Component {
           >
             用户通过微信分享给朋友时，会自动显示页面描述
           </p>
-          <Divider>用户参与设置</Divider>
+          <TheLine text="用户参与设置" />
           <Form.Item label="免费参与次数">
             {getFieldDecorator('freeType', {
               initialValue: FreeType
@@ -155,14 +162,17 @@ class Step1 extends React.Component {
             )}
           </Form.Item>
           <Form.Item label="允许使用积分">
-            {getFieldDecorator('checkedCostIntegral', {
-              initialValue: !!CostIntegral || CostIntegral === 0
-            })(<Checkbox />)}
+            {getFieldDecorator('checkedCostIntegral')(
+              <Checkbox
+                checked={checkedCostIntegral}
+                onChange={toggleCheckedCostIntegral}
+              />
+            )}
           </Form.Item>
           <Form.Item label="消耗积分">
             {getFieldDecorator('costIntegral', {
               initialValue: CostIntegral
-            })(<InputNumber min={1} />)}
+            })(<InputNumber min={1} disabled={!checkedCostIntegral} />)}
           </Form.Item>
           <Form.Item label="温馨提示" className="the-tips">
             <span>未勾选，那么用户将无法使用积分购买抽奖机会；</span>

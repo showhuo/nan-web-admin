@@ -54,7 +54,10 @@ class Step4 extends React.Component {
         <img src={imgurl} alt="lottery" className="lottery-img" />
         <Form {...formItemLayout} className="the-form">
           <Form.Item label="链接地址" style={{ marginTop: '.2rem' }}>
-            <Input value={LinkUrl} style={{ width: '80%' }} />
+            <Input
+              value={LinkUrl}
+              style={{ width: '65%', marginRight: '0.1rem' }}
+            />
             <Button
               type="primary"
               onClick={() => {
@@ -66,7 +69,7 @@ class Step4 extends React.Component {
           </Form.Item>
           <span
             className="the-tips"
-            style={{ position: 'absolute', left: '1.7rem', top: '.7rem' }}
+            style={{ position: 'absolute', left: '1.8rem', top: '.65rem' }}
           >
             直接复制该链接给您的粉丝
           </span>
@@ -77,17 +80,15 @@ class Step4 extends React.Component {
               alt="qrcode"
             />
           </Form.Item>
-          <Form.Item wrapperCol={{ offset: 6 }}>
-            <span
-              className="the-tips"
-              style={{ display: 'inline-block', width: '2.3rem' }}
-            >
+          <Form.Item wrapperCol={{ offset: 6 }} className="the-tips">
+            <span style={{ display: 'inline-block', width: '2.3rem' }}>
               您也可以微信扫一扫打开链接，然后 分享给您的粉丝目前仅通过点击被人
               分享的链接进入，请尽快分享出
             </span>
-          </Form.Item>
-          <Form.Item wrapperCol={{ offset: 6 }}>
-            <a href={QrcodeUrl}>下载</a>
+            {/* TODO 更换 url 地址，后端单独提供下载地址，区别在于头部字段 Content-Disposition */}
+            <a href={QrcodeUrl} download="二维码" style={{ display: 'block' }}>
+              下载
+            </a>
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 6 }}>
