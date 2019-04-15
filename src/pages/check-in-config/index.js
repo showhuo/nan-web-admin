@@ -61,6 +61,7 @@ export default class CheckInConfig extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({ loading: true })
     // 获取之前的设置数据
     const WxSeetingId = getUrlParam().WxSeetingId || ''
     axios
@@ -69,7 +70,10 @@ export default class CheckInConfig extends React.Component {
       })
       .then(result => {
         // 将 result 替换当前 state
-        if (result) this.setState(result)
+        if (result) {
+          this.setState(result)
+          this.setState({ loading: false })
+        }
       })
   }
 
@@ -134,7 +138,8 @@ export default class CheckInConfig extends React.Component {
       modalContiReward,
       modalDayReward,
       IsLoopModel,
-      CycleDay
+      CycleDay,
+      loading
     } = this.state
     const isDayRewardModal = modalType === 'setDayReward'
 
@@ -202,6 +207,7 @@ export default class CheckInConfig extends React.Component {
               循环模式下，超过固定周期天数的连签奖励将不向用户展示和发放,并且同一个周期内每份奖励只能领取一次
             </span>
             <Table
+              loading={loading}
               size="small"
               rowKey="Id"
               columns={this.getColumns()}
@@ -380,9 +386,9 @@ export default class CheckInConfig extends React.Component {
         const index = _.findIndex(ContinuousRewardList, { Id: modalContiRowId })
         if (index !== -1) {
           const newTableData = ContinuousRewardList.concat()
-          // TODO 去重，与新增不一样
+          // 去重，与新增不一样
           const isDuplicated =
-            _.findLastIndex(newTableData, { Day: modalContiDays }) === index
+            _.findLastIndex(newTableData, { Day: modalContiDays }) !== index
           if (isDuplicated) {
             message.error('不允许设置相同天数')
             return
@@ -471,7 +477,8 @@ export default class CheckInConfig extends React.Component {
       Describe,
       ActiveImg,
       ActiveImgDefault,
-      Id
+      Id,
+      loading
     } = this.state
     return (
       <Content

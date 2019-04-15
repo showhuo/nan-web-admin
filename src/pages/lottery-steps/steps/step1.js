@@ -15,7 +15,7 @@ import {
 import assembleParams from '../../../utils/assemble-params'
 import getUrlParam from '../../../utils/qs'
 import moment from 'moment'
-import { TheLine } from './Step2'
+import { TheLine } from './step2'
 
 const { RangePicker } = DatePicker
 

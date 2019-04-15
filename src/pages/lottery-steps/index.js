@@ -4,12 +4,12 @@ import axios from '../../utils/axios'
 // import history from '../../utils/history'
 import getUrlParams from '../../utils/qs'
 import qs from 'qs'
-import Step0 from './steps/Step0'
-import Step1 from './steps/Step1'
-import Step2 from './steps/Step2'
-import Step3 from './steps/Step3'
+import Step0 from './steps/step0'
+import Step1 from './steps/step1'
+import Step2 from './steps/step2'
+import Step3 from './steps/step3'
 import './style.less'
-import Step4 from './steps/Step4'
+import Step4 from './steps/step4'
 
 const { Content } = Layout
 const { Step } = Steps
