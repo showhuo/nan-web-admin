@@ -26,8 +26,14 @@ class TodoPage extends React.Component {
     const platFormId = localStorage.getItem('platFormId')
     const newObj = Object.assign({}, obj, {
       'param.accountId': accountId,
-      'param.platFormId': accountId
+      'param.platFormId': platFormId
     })
+    // 空值字段清除
+    for (const key in newObj) {
+      if (newObj.hasOwnProperty(key) && !newObj[key]) {
+        delete newObj[key]
+      }
+    }
     const urlParam = qs.stringify(newObj)
     // 表格数据
     axios.post(`/api/Active_LuckDraw/ListAsync?${urlParam}`).then(res => {
