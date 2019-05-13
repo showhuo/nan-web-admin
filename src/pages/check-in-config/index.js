@@ -65,7 +65,7 @@ export default class CheckInConfig extends React.Component {
     // 获取之前的设置数据
     const WxSeetingId = getUrlParam().WxSeetingId || ''
     axios
-      .get('http://106.14.115.8:8012/api/Active_SignIn/InitAsync', {
+      .get('/api/Active_SignIn/InitAsync', {
         params: { 'param.wxSeetingId': WxSeetingId }
       })
       .then(result => {

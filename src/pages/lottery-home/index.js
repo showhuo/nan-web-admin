@@ -23,6 +23,7 @@ class TodoPage extends React.Component {
   query = (obj = {}) => {
     this.setState({ loading: true })
     const accountId = localStorage.getItem('accountId')
+    const platFormId = localStorage.getItem('platFormId')
     const newObj = Object.assign({}, obj, {
       'param.accountId': accountId,
       'param.platFormId': accountId
@@ -38,7 +39,7 @@ class TodoPage extends React.Component {
     axios
       .get('/api/Active_LuckDraw/WxSignListAsync', {
         params: {
-          'param.plantFrom': accountId
+          'param.plantFrom': platFormId
         }
       })
       .then(publicArr => {

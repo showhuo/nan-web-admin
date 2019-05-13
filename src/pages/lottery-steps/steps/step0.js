@@ -15,11 +15,11 @@ export default class ChoosePublic extends React.Component {
 
   getPublics = () => {
     //  获取公众号列表，带上用户标识参数
-    const accountId = localStorage.getItem('accountId')
+    const platFormId = localStorage.getItem('platFormId')
     axios
       .get('/api/Active_LuckDraw/WxSignListAsync', {
         params: {
-          'param.plantFrom': accountId
+          'param.plantFrom': platFormId
         }
       })
       .then(publicList => {

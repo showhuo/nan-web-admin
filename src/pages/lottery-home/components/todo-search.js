@@ -8,7 +8,7 @@ moment.locale('zh-cn')
 
 const { RangePicker } = DatePicker
 const drawActiveStateArr = [
-  { label: '全部', value: '' },
+  { label: '全部', value: null },
   { label: '已结束', value: 1 },
   { label: '未发布', value: 2 },
   { label: '未开始', value: 3 },

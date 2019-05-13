@@ -24,6 +24,7 @@ class NormalLoginForm extends React.Component {
             if (res) {
               // 将用户 accountId 存储供后续使用
               localStorage.setItem('accountId', res.PlatFormAccountId)
+              localStorage.setItem('platFormId', res.PlatFormId)
               history.push('/check-in-home')
             }
           })
