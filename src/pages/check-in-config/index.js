@@ -477,8 +477,7 @@ export default class CheckInConfig extends React.Component {
       Describe,
       ActiveImg,
       ActiveImgDefault,
-      Id,
-      loading
+      Id
     } = this.state
     return (
       <Content

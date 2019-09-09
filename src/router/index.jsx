@@ -15,6 +15,7 @@ export default function CoreRouter() {
       <Route component={lazyloader('lottery-home')} path="/lottery-home" />
       <Route component={lazyloader('lottery-result')} path="/lottery-result" />
       <Route component={lazyloader('lottery-steps')} path="/lottery-steps" />
+      <Route component={lazyloader('moqi-login')} path="/moqi-login" />
       <Redirect to="/login" />
     </Switch>
   )

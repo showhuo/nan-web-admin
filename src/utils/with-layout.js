@@ -79,6 +79,17 @@ export default function withLayout(WrappedComponent) {
               >
                 <Menu.Item key="/check-in-home">日历签到</Menu.Item>
               </SubMenu>
+              <SubMenu
+                key="sub3"
+                title={
+                  <span>
+                    <Icon type="cloud" />
+                    <span>魔启</span>
+                  </span>
+                }
+              >
+                <Menu.Item key="/moqi-login">魔启登录</Menu.Item>
+              </SubMenu>
             </Menu>
           </Sider>
           <Layout>

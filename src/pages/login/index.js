@@ -69,7 +69,12 @@ class NormalLoginForm extends React.Component {
 const WrappedNormalLoginForm = Form.create()(NormalLoginForm)
 
 export default class Login extends React.Component {
+  state = {
+    tab: 'normal'
+  }
   render() {
+    const { tab } = this.state
+    const isNormalTab = tab === 'normal'
     return (
       <div className="login">
         <div className="header">
@@ -79,8 +84,38 @@ export default class Login extends React.Component {
         <div className="body">
           <div className="ads" />
           <div className="content">
-            <div className="scan">账号登录</div>
-            <WrappedNormalLoginForm />
+            <div className="the-tab-container">
+              <div
+                className={`the-tab normal ${isNormalTab ? '' : 'un-select'}`}
+                onClick={() => {
+                  this.setState({ tab: 'normal' })
+                }}
+              >
+                账号登录
+              </div>
+              <div
+                className={`the-tab moqi ${isNormalTab ? 'un-select' : ''}`}
+                onClick={() => {
+                  this.setState({ tab: 'moqi' })
+                }}
+              >
+                魔启登录
+              </div>
+            </div>
+            {isNormalTab && <WrappedNormalLoginForm />}
+            {!isNormalTab && (
+              <div className="the-moqi-content">
+                <div className="the-img" />
+                <div
+                  className="the-btn"
+                  onClick={() => {
+                    window.location.href = 'http://120.77.254.223:10003/'
+                  }}
+                >
+                  前往魔启登录
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
