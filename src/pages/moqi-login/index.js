@@ -10,7 +10,7 @@ class MoqiLogin extends Component {
         <div
           className="the-btn"
           onClick={() => {
-            window.location.href = 'http://120.77.254.223:10003/'
+            window.open('http://120.77.254.223:10003/', '_blank')
           }}
         >
           前往魔启登录

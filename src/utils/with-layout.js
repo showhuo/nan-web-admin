@@ -83,7 +83,7 @@ export default function withLayout(WrappedComponent) {
                 key="sub3"
                 title={
                   <span>
-                    <Icon type="cloud" />
+                    <Icon type="stock" />
                     <span>魔启</span>
                   </span>
                 }
